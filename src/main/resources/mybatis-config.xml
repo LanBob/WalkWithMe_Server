@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!--<properties resource="db.properties" />-->
+
+	<settings>
+		<setting name="logImpl" value="LOG4J" />
+	</settings>
+
+	<typeAliases>
+		<package name="com.domain" />
+	</typeAliases>
+
+	<!--
+	默认选择dev这个环境
+	<environments default="test">
+		<environment id="dev">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+			</dataSource>
+		</environment>
+
+		<environment id="test">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	-->
+
+	<!--
+	 修改对应的mapper文件
+	 多个mapper文件 
+	 -->
+	<mappers>
+		<mapper resource="com/mapper/X_User_mapper.xml" />
+		<mapper resource="com/mapper/X_Person_setting_mapper.xml" />
+		<mapper resource="com/mapper/X_User_follow_mapper.xml" />
+		<mapper resource="com/mapper/X_View_show_mapper.xml" />
+		<mapper resource="com/mapper/X_Find_view_mapper.xml" />
+		<mapper resource="com/mapper/X_Person_mapper.xml" />
+		<mapper resource="com/mapper/X_Chat_message_mapper.xml" />
+		<mapper resource="com/mapper/X_Star_mapper.xml" />
+		<mapper resource="com/mapper/X_Collection_mapper.xml" />
+		<mapper resource="com/mapper/X_Star_collection_mapper.xml" />
+	</mappers>
+
+</configuration>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里对用接口的名称 -->
+<mapper namespace="com.mapper.StarMapper">
+
+	<!-- column是数据库的列名。而property是对象 -->
+	<resultMap type="Star" id="star">
+		<result column="id" property="id" />
+		<result column="view_show_id" property="view_show_id" />
+		<result column="who_star" property="who_star" />
+	</resultMap>
+	
+	<!-- 特别注意：这里是基本数据类型要使用resultType-->
+	<select id="list_star" resultType="java.lang.Long">
+		select view_show_id from star WHERE
+		who_star=#{who_star}
+	</select>
+	
+	<select id="get" resultMap="star">
+		select * from star where view_show_id=#{view_show_id} and who_star=#{who_star}
+	</select>
+
+	<insert id="insert">
+		insert ignore into
+		<choose>
+			<when test="id == null">
+				star(view_show_id,who_star) values(#{view_show_id},#{who_star})
+			</when>
+			<otherwise>
+				star(id,view_show_id,who_star)
+				values(#{id},#{view_show_id},#{who_star})
+			</otherwise>
+		</choose>
+	</insert>
+
+	<!-- 特别注意：这里进行删除，传入的参数第一个一定要是tour_id，第二个一定要是guide_id -->
+	<delete id="delete">
+		DELETE from star
+		where view_show_id=#{view_show_id} AND who_star=#{who_star}
+	</delete>
+
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       这个顺序不能变-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:websocket="http://www.springframework.org/schema/websocket"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd"
+       default-autowire="byName">
+
+    <context:component-scan base-package="com.mapper"/>
+    <context:component-scan base-package="com.domain"/>
+    <context:component-scan base-package="com.service"/>
+    <context:component-scan base-package="com.util"/>
+    <context:component-scan base-package="com.test"/>
+    <context:component-scan base-package="com.servlet"/>
+    <context:component-scan base-package="com.app.JMS"/>
+
+    <!--加载db.properties-->
+    <!--1 引入属性文件，在配置中占位使用 -->
+    <bean id="config" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+        <property name="locations">
+            <array>
+                <value>classpath:db.properties</value>
+            </array>
+        </property>
+    </bean>
+
+    <!--这个会自动提交,配置数据源-->
+    <bean id="dataSource"
+          class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${driver}"></property>
+        <property name="url" value="${url}"></property>
+        <property name="username" value="${username}"></property>
+        <property name="password" value="${password}"></property>
+    </bean>
+
+    <bean id="SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--加载Mybatis配置文件-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+    </bean>
+
+
+    <!--事务管理器配置数据源事务 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--使用注解定义事务-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- 该 BeanPostProcessor 将自动起作用，对标注 @Autowired 的 Bean 进行自动注入 -->
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor "/>
+
+    <!--告诉Spring要在哪个包扫描Repository,即采用自动扫描方式创建Mapper Bean-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.mapper"/>
+        <!--得到SqlSessionFactory-->
+        <property name="sqlSessionFactoryBeanName" value="SqlSessionFactory"/>
+        <!--把Repository注解标识的类作为Mapper对象-->
+        <!-- 指定要自动扫描接口的基础包，实现接口 -->
+        <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
+    </bean>
+
+
+</beans>

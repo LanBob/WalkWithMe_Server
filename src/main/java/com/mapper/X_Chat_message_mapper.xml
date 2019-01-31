@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- 这里对用接口的名称 -->
+<mapper namespace="com.mapper.ChatMessageMapper">
+	
+	<resultMap type="ChatMessageDao" id="chat_message">
+		<result column="from_userID" property="from_userID"/>
+		<result column="to_userID" property="to_userID"/>
+		<result column="path" property="path"/>
+		<result column="message" property="message"/>
+	</resultMap>
+
+
+	<select id="listAll" resultMap="chat_message">
+		select * from chat_message where to_userID = #{to_userID}
+	</select>
+	
+	<delete id="delete">
+		delete from chat_message where to_userID=#{to_userID}
+	</delete>
+	
+	<insert id="insert">
+		insert into chat_message(from_userID,to_userID,path,message)
+		values(#{from_userID},#{to_userID},#{path},#{message})
+	</insert>
+    
+</mapper>

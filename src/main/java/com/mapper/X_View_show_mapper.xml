@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- 这里对用接口的名称 -->
+<mapper namespace="com.mapper.ViewShowMapper">
+
+	<!-- column是数据库的列名。而property是对象 -->
+	<resultMap type="ViewShowDao" id="viewShow">
+		<result column="id" property="id"/>
+		<result column="title" property="title"/>
+		<result column="introduce" property="introduce"/>
+		<result column="city" property="city"/>
+		<result column="star" property="star"/>
+		<result column="user_id" property="user_id"/>
+		<result column="type" property="type"/>
+		<result column="money" property="money"/>
+		<result column="collection" property="collection"/>
+		<result column="interest" property="interest"/>
+		<result column="defaultpath" property="defaultpath"/>
+	</resultMap>
+	
+	<insert id="insert">
+		insert into 
+		<choose>
+            <when test="id == null">
+            	view_show(title,introduce,city,star,user_id,type,money,collection,interest,defaultpath)
+            	values(#{title},#{introduce},#{city},#{star},#{user_id}
+            	,#{type},#{money},#{collection},#{interest},#{defaultpath})
+            </when>
+            <otherwise>
+            	view_show(id,title,introduce,city,star,user_id,type,money,collection,interest,defaultpath)
+            	values(#{id},#{title},#{introduce},#{city},#{star},#{user_id}
+            	,#{type},#{money},#{collection},#{interest},#{defaultpath})
+            </otherwise>
+        </choose>
+	</insert>
+	
+	<select id="get" resultMap="viewShow">
+		select * from view_show where id=#{id}
+	</select>
+	
+	<insert id="update">
+		update view_show
+		<trim prefix="set" suffixOverrides=",">
+			<if test="title!=null and ''!=title ">title=#{title},</if>
+			<if test="introduce!=null and ''!=introduce ">introduce=#{introduce},</if>
+			<if test="city!=null and ''!=city ">city=#{city},</if>
+			<if test="type!=null and ''!=type ">type=#{type},</if>
+			<if test="money!=null and ''!=money ">money=#{money},</if>
+		</trim>
+		where id=#{id}
+	</insert>
+	
+	<delete id="delete">
+		delete from view_show where id = #{id} 
+	</delete>
+	
+</mapper>

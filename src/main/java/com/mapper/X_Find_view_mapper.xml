@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- 这里对用接口的名称 -->
+<mapper namespace="com.mapper.FindViewMapper">
+
+	<!-- column是数据库的列名。而property是对象 -->
+	
+	<!--
+	private String title;
+	private String city;
+	private Long user_id;
+	private int type;
+	private BigDecimal money;
+	
+	private Long id;
+	private int star; 
+	 -->
+	
+	<resultMap type="FindViewDao" id="findView">
+		<result column="title" property="title"/>
+		<result column="cyty" property="cyty"/>
+		<result column="user_id" property="user_id"/>
+		<result column="type" property="type"/>
+		<result column="money" property="money"/>
+		<result column="id" property="id"/>
+		<result column="star" property="star"/>
+		<result column="defaultpath" property="defaultpath"/>
+	</resultMap>
+
+
+	<select id="get_list_by_userId" resultMap="findView">
+		select * from find_view where user_id=#{user_id}
+	</select>
+	
+	<select id="get_list_by_type" resultMap="findView">
+		select * from find_view where type = #{type}
+	</select>
+	
+	<select id="get_by_view_showID" resultMap="findView">
+		select * from find_view where id = #{id}
+	</select>
+	
+	<delete id="delete">
+		delete from find_view where id=#{id}
+	</delete>
+    
+    <insert id="insert">
+    insert into	find_view(title,city,user_id,type,money,id,star,defaultpath)
+    values(#{title},#{city},#{user_id},#{type},#{money},#{id},#{star},#{defaultpath})
+    </insert>	
+    
+    
+	
+</mapper>

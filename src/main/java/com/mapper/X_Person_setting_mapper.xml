@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- 这里对用接口的名称 -->
+<mapper namespace="com.mapper.PersonSettingMapper">
+
+	<!-- 需要解决的问题是：这里java代码的名称或者 dao的属性名
+	和sql数据库的列名不相同的时候，应该怎么解决？使用resultMap    结果集和对象的映射
+	id： Mapper文件中resultMap中的唯一名称
+	type:把结果集中的每一行封装成什么类型的对象
+			子元素：result
+	-->
+	<!-- column是数据库的列名。而property是对象 -->
+	<resultMap type="PersonSettingDao" id="personSettingDao">
+		<result column="id" property="id"/>
+		<result column="alias" property="alias"/>
+		<result column="sex" property="sex"/>
+		<result column="love" property="love"/>
+		<result column="introduce" property="introduce"/>
+		<result column="city" property="city"/>
+		<result column="age" property="age"/>
+		<result column="phone_num" property="phone_num"/>
+	</resultMap>
+	
+	
+
+	<!-- 插入操作 -->
+	<select id="insert">
+		insert into user_setting(id,alias,sex,love,introduce,city,age,phone_num) 
+		values(#{id},#{alias},#{sex},#{love},#{introduce},#{city},#{age},#{phone_num})
+	</select>
+	
+	<!-- 修改操作 -->
+	<insert id="update">
+		update user_setting
+		<trim prefix="set" suffixOverrides=",">
+			<if test="alias!=null and ''!=alias ">alias=#{alias},</if>
+			<if test="sex!=null and ''!=sex ">sex=#{sex},</if>
+			<if test="love!=null and ''!=love ">love=#{love},</if>
+			<if test="introduce!=null and ''!=introduce">introduce=#{introduce},</if>
+			<if test="city!=null and ''!=city ">city=#{city},</if>
+			<if test="phone_num !=null and ''!= phone_num ">phone_num=#{phone_num},</if>
+			<if test="age !=null and ''!= age ">age=#{age},</if>
+		</trim>
+		where id=#{id}
+	</insert>
+	
+	<select id="get" resultMap="personSettingDao">
+		SELECT * from user_setting WHERE id=#{id}
+	</select>
+	
+	<delete id="delete">
+		delete from user_setting where id=#{id}
+	</delete>
+	
+	<!--
+	select * FROM user_setting
+	//查询设置
+	SELECT alias,sex,love,introduce,city from user_setting WHERE id=1
+
+	//删除设置：
+	delete from user_setting where id=1158746179 
+	 -->
+	
+</mapper>

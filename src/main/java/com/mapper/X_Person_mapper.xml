@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.PersonDaoMapper">
+
+	<resultMap type="PersonDao" id="personDao">
+		<result column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="introduce" property="introduce"/>
+		<result column="sex" property="sex"/>
+	</resultMap>
+
+	<!-- 增        插入操作：useGeneratedKeys是否使用id自增，keyProperty哪个自增 -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT
+		INTO person (id,name,introduce,sex)
+		VALUES(#{id},#{name},#{introduce},#{sex})
+	</insert>
+
+	<!--删         删除操作 -->
+	<delete id="delete">
+		DELETE FROM person WHERE id = #{id}
+	</delete>
+
+
+	<!-- 改       更改操作 -->
+	<update id="update">
+		UPDATE person SET
+		name= #{name} ,introduce = #{introduce}, sex=#{sex} WHERE id = #{id}
+	</update>
+
+
+
+	<!-- 查    查询操作： get 和listAll -->
+	<select id="get" resultMap="personDao">
+		select * from person where id =
+		#{id}
+	</select>
+	<!-- 查       查询所有 -->
+	<select id="listAll" resultMap="personDao">
+		select * from person
+	</select>
+
+
+</mapper>

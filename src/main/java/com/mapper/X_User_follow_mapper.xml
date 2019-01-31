@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里对用接口的名称 -->
+<mapper namespace="com.mapper.UserFollowMapper">
+
+	<!-- column是数据库的列名。而property是对象 -->
+	<resultMap type="UserFollowDao" id="userFollow">
+		<result column="follower" property="follower" />
+		<result column="followed" property="followed" />
+		<result column="id" property="id" />
+	</resultMap>
+	
+	<!-- 特别注意：这里是通过游客的tour_id来进行的查询 -->
+	<select id="get" resultMap="userFollow">
+		select * from user_follow WHERE
+		follower=#{follower}
+	</select>
+	
+	<select id="get_user_follow" resultMap="userFollow">
+		select * from user_follow where
+		follower= #{follower} and followed=#{followed}
+	</select>
+	
+	<select id="get_followed_id" resultType="java.lang.Long">
+		select followed from user_follow WHERE
+		follower=#{follower}
+	</select>
+
+	<insert id="insert">
+		insert ignore into
+		<choose>
+			<when test="id == null">
+				user_follow(follower,followed) values(#{follower},#{followed})
+			</when>
+			<otherwise>
+				user_follow(id,follower,followed)
+				values(#{id},#{follower},#{followed})
+			</otherwise>
+		</choose>
+	</insert>
+
+	<!-- 特别注意：这里进行删除，传入的参数第一个一定要是tour_id，第二个一定要是guide_id -->
+	<delete id="delete">
+		DELETE from user_follow
+		where follower=#{follower} AND followed=#{followed}
+	</delete>
+
+</mapper>
+
+<!-- insert into user_follow(id,guide_id,tour_id,city) values(1,13424158682,13424158682,'广州') 
+	select * from user_follow WHERE tour_id=13424158682 DELETE from user_follow 
+	where tour_id=13424158682 AND guide_id=13424158682 -->

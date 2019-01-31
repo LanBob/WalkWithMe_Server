@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- 这里对用接口的名称 -->
+<mapper namespace="com.mapper.UserMapper">
+
+	<!-- 需要解决的问题是：这里java代码的名称或者 dao的属性名
+	和sql数据库的列名不相同的时候，应该怎么解决？使用resultMap    结果集和对象的映射
+	id： Mapper文件中resultMap中的唯一名称
+	type:把结果集中的每一行封装成什么类型的对象
+			子元素：result
+	-->
+	<!-- column是数据库的列名。而property是对象 -->
+	<resultMap type="User" id="user_result">
+		<result column="id" property="id"/>
+		<result column="password" property="password"/>
+	</resultMap>
+	
+	
+
+
+	<select id="get" resultMap="user_result">
+		select * from user where id =
+		#{id}
+	</select>
+	
+	<!-- 改       更改操作 -->
+	<update id="change_password">
+		update user set password=#{password} where id=#{id}
+	</update>
+	
+	<update id="insert">
+		insert into user(id,password) values(#{id},#{password});
+	</update>
+	
+	<delete id="delete">
+		delete from user where id=#{id}
+	</delete>
+	
+	
+	<!-- 使用基本数据类型，别名就是对用小写 使用map避免返回空值 
+	<select id="queryMap" resultType="map">
+		SELECT u_id,u_name from walk_user
+	</select>
+	-->
+</mapper>
