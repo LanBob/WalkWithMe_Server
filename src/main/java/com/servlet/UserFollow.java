@@ -57,6 +57,7 @@ public class UserFollow extends HttpServlet {
         Long foed_id = null;
         System.out.println("chat=============================");
         req.setCharacterEncoding("utf-8");
+        resp.setCharacterEncoding("utf-8");
         String follower = req.getParameter("follower");
         String followed = req.getParameter("followed");
         String code = req.getParameter("code");

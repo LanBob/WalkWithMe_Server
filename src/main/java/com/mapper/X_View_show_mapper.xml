@@ -39,6 +39,9 @@
 	<select id="get" resultMap="viewShow">
 		select * from view_show where id=#{id}
 	</select>
+	<select id="searchByKeyWord" resultMap="viewShow">
+		select * from view_show where introduce LIKE CONCAT('%',#{title},'%') or city LIKE CONCAT('%',#{title},'%') or title like CONCAT('%',#{title},'%')
+	</select>
 	
 	<insert id="update">
 		update view_show

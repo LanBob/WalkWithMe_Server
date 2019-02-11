@@ -1,7 +1,10 @@
 package com.mapper;
 
 import com.domain.ViewShowDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface ViewShowMapper {
@@ -26,5 +29,7 @@ public interface ViewShowMapper {
 	int update(ViewShowDao dao);
 	
 	int delete(Long id);
+
+	List<ViewShowDao> searchByKeyWord(@Param("title") String keyWord);
 	
 }	

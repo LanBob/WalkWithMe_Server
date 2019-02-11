@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by ownlove on 2019/1/27.
  */
@@ -26,5 +28,10 @@ public class ViewShowService implements IViewShowService {
     @Override
     public ViewShowDao get(Long id) {
         return viewShowMapper.get(id);
+    }
+
+    @Override
+    public List<ViewShowDao> searchByKeyWord(String keyWord) {
+        return viewShowMapper.searchByKeyWord(keyWord);
     }
 }

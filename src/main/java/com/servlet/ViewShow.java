@@ -80,6 +80,7 @@ public class ViewShow extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        resp.setCharacterEncoding("utf-8");
         PrintWriter pw = null;
         try {
             save(req, resp);//处理结果

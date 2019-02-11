@@ -1,8 +1,11 @@
 package com.test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.domain.*;
 import com.mapper.*;
@@ -21,8 +24,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //eyAibmFtZSI6InJ1bm9vYiIgLCAidXJsIjoid3d3LnJ1bm9vYi5jb20iIH0=
 //
 @Component
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration("classpath:beans.xml")
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath:beans.xml")
 public class AppTest {
 
     @Autowired
@@ -43,6 +46,47 @@ public class AppTest {
     private UserMapper userMapper;
     @Autowired
     private ViewShowMapper viewShowMapper;
+
+
+    @Test
+    public void Exg(){
+        String s = "\"yyyyyyyyyyyyyyyyyyyyy<img src=\\\"IMG_1871095507.jpg\\\"/><img src=\\\"IMG_20181124_084426.jpg\\\"/>ertyertyertyerty\"";
+        List<String> list = cutStringByImgTag(s);
+        for (String ss :
+                list) {
+            System.out.println(ss);
+        }
+    }
+
+    public List<String> cutStringByImgTag(String targetStr) {
+        List<String> splitTextList = new ArrayList<String>();
+        Pattern pattern = Pattern.compile("<img.*?src=\\\"(.*?)\\\".*?>");
+        Matcher matcher = pattern.matcher(targetStr);
+        int lastIndex = 0;
+        while (matcher.find()) {
+//            if (matcher.start() > lastIndex) {
+//                splitTextList.add(targetStr.substring(lastIndex, matcher.start()));
+//            }
+//            splitTextList.add(targetStr.substring(matcher.start(), matcher.end()));
+//            lastIndex = matcher.end();
+            System.out.println("sss");
+        }
+
+        if (lastIndex != targetStr.length()) {
+            splitTextList.add(targetStr.substring(lastIndex, targetStr.length()));
+        }
+        return splitTextList;
+    }
+
+    @Test
+    public void Search(){
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        List<ViewShowDao> list = (List<ViewShowDao>) viewShowMapper.searchByKeyWord("北京");
+
+        for (ViewShowDao dao : list) {
+            System.out.println(dao);
+        }
+    }
 
     @Test
     public void Mybatis_Spring() {
