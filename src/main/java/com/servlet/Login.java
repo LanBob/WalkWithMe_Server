@@ -63,6 +63,7 @@ public class Login extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setCharacterEncoding("utf-8");
         String u_name = req.getParameter("username");
         Long username = null;
         String md5 = "";

@@ -98,6 +98,7 @@ public class FollowCollection extends HttpServlet {
         Long userID = null;
         int code = -1;
         req.setCharacterEncoding("utf-8");
+        resp.setCharacterEncoding("utf-8");
         String follower = req.getParameter("userId");
         String c = req.getParameter("code");
         String v_id = req.getParameter("view_show_id");

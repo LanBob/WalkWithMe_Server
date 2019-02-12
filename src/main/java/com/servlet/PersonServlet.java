@@ -46,6 +46,7 @@ public class PersonServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("utf-8");
+        resp.setCharacterEncoding("utf-8");
         PrintWriter pw;
         Long id = Long.valueOf(req.getParameter("id"));
         PersonDao dao = personDaoService.get(id);

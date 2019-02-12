@@ -53,6 +53,7 @@ public class ChatServlet extends HttpServlet {
 		System.out.println("=============================");
 
 		req.setCharacterEncoding("utf-8"); // 设置编码
+		resp.setCharacterEncoding("utf-8");
 
 		// 获得磁盘文件条目工厂
 		if (factory == null) {

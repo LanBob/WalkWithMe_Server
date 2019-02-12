@@ -43,6 +43,7 @@ public class Checked extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		System.out.println("chat=============================");
+		resp.setCharacterEncoding("utf-8");
 		req.setCharacterEncoding("utf-8");
 		String json = req.getParameter("json");
 		System.out.println("req"+json);

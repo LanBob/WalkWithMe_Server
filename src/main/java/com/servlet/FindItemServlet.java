@@ -57,6 +57,7 @@ public class FindItemServlet extends HttpServlet {
 //		findItemService = ContextUtil.getBean(FindItemServiceImpl.class);
 //		result = ContextUtil.getBean(ResponseResult.class);
         Map map = getHeadersInfo(req);
+        resp.setCharacterEncoding("utf-8");
         System.out.println(map);
         int type = Integer.valueOf(req.getParameter("type"));
         PrintWriter pw = null;

@@ -57,6 +57,7 @@ public class PersonSetting extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("utf-8");
+        resp.setCharacterEncoding("utf-8");
         String json = req.getParameter("person_setting");
         person_settingDao = JSONUtil.toBean(json, PersonSettingDao.class);
         PrintWriter print = null;
