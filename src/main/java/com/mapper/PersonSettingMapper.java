@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PersonSettingMapper {
 	
-	int insert(PersonSettingDao person);
+	void insert(PersonSettingDao person);
 	
 	int update(PersonSettingDao person);
 	

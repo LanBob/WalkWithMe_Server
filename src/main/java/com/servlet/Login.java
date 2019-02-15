@@ -88,7 +88,7 @@ public class Login extends HttpServlet {
             } else {
                 feedBack(resp, 0);//如果账户不存在
             }
-        } else {
+        } else {//注册
             Map m = JSONUtil.toMap(userJson);
             Long id = Long.valueOf(m.get("username").toString());
             user.setId(id);

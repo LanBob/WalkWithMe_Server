@@ -33,6 +33,7 @@ public class PersonSetting extends HttpServlet {
     @Autowired
     private PersonSettingDao person_settingDao;
 
+    @Autowired
     private IPersonSettingService personSettingService;
 
     @Autowired
@@ -60,6 +61,7 @@ public class PersonSetting extends HttpServlet {
         resp.setCharacterEncoding("utf-8");
         String json = req.getParameter("person_setting");
         person_settingDao = JSONUtil.toBean(json, PersonSettingDao.class);
+        System.out.println(person_settingDao);
         PrintWriter print = null;
         personSettingService.insert(person_settingDao);
         result.setCode(1);

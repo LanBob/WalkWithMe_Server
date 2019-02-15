@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import com.domain.*;
 import com.mapper.*;
+import com.service.IPersonSettingService;
 import com.servlet.ViewShow;
 import com.util.ContextUtil;
 import org.junit.Test;
@@ -47,15 +48,34 @@ public class AppTest {
     @Autowired
     private ViewShowMapper viewShowMapper;
 
+    @Autowired
+    private IPersonSettingService personSettingService;
 
     @Test
-    public void Exg(){
-        String s = "\"yyyyyyyyyyyyyyyyyyyyy<img src=\\\"IMG_1871095507.jpg\\\"/><img src=\\\"IMG_20181124_084426.jpg\\\"/>ertyertyertyerty\"";
-        List<String> list = cutStringByImgTag(s);
-        for (String ss :
-                list) {
-            System.out.println(ss);
-        }
+    public void personSetting(){
+        PersonSettingDao personSettingDao = new PersonSettingDao();
+        personSettingDao.setCity("s");
+        personSettingDao.setAge(1);
+        personSettingDao.setAlias("s");
+        personSettingDao.setIntroduce("s");
+        personSettingDao.setLove("s");
+        personSettingDao.setPhone_num("1");
+        personSettingDao.setSex("s");
+        personSettingDao.setId(11L);
+        personSettingService.insert(personSettingDao);
+
+    }
+
+    @Test
+    public void isInte(){
+        String userName = "014586786098";
+        System.out.println(isInteger(userName));
+    }
+    public boolean isInteger(String str) {
+        //加或减出现一次或者零次，然后数字出现任意次
+//        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+        Pattern pattern = Pattern.compile("^[\\d]*$");
+        return pattern.matcher(str).matches();
     }
 
     public List<String> cutStringByImgTag(String targetStr) {

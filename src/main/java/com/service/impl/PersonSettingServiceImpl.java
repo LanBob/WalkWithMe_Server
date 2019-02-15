@@ -20,7 +20,7 @@ public class PersonSettingServiceImpl implements IPersonSettingService {
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     @Override
-    public int insert(PersonSettingDao personSettingDao) {
-        return personSettingMapper.insert(personSettingDao);
+    public void insert(PersonSettingDao personSettingDao) {
+        personSettingMapper.insert(personSettingDao);
     }
 }
