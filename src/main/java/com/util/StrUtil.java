@@ -153,4 +153,10 @@ public class StrUtil {
             }
         }
     }
+
+    public static String getMessageCode(){
+        Long time  = System.currentTimeMillis();
+        String code = time.toString().substring(8,12);
+        return code;
+    }
 }

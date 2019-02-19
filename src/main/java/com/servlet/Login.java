@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.util.StrUtil;
+import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.session.SqlSession;
 
 import com.domain.ResponseResult;
@@ -18,6 +20,7 @@ import com.domain.User;
 import com.mapper.UserMapper;
 import com.util.JSONUtil;
 
+import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -64,41 +67,69 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setCharacterEncoding("utf-8");
-        String u_name = req.getParameter("username");
-        Long username = null;
-        String md5 = "";
-        if (u_name != null) {
-            username = Long.valueOf(u_name);
-            md5 = req.getParameter("password");
-        }
-        System.out.println("md5=" + md5);
+        String json = req.getParameter("data");
+        String code = req.getParameter("code");
 
-        String userJson = req.getParameter("user");
-        System.out.println("userJosn = " + userJson);
+        Map m = JSONUtil.toMap(json);
+        if("0".equals(code)){//注册业务
+            String username = m.get("username").toString();
+            String md5 = m.get("md5").toString();
+            String messageCode = m.get("messageCode").toString();
+            Long id = Long.valueOf(username);
 
-        if (userJson == null) {// 进行登录操作
-            // username Md5
-            User u_c = userMapper.get(username);
-            if (u_c != null) {
-                if (md5.equals(u_c.getPassword())) {
-                    feedBack(resp, 1);//如果账号和密码正确
-                } else {
-                    feedBack(resp, 0);//如果密码不正确
-                }
-            } else {
-                feedBack(resp, 0);//如果账户不存在
+            boolean isMessageCodeTrue =  false;
+            if(messageCode.equals("")){
+                isMessageCodeTrue = true;
             }
-        } else {//注册
-            Map m = JSONUtil.toMap(userJson);
-            Long id = Long.valueOf(m.get("username").toString());
-            user.setId(id);
-            user.setPassword(m.get("password").toString());
-            userMapper.insert(user);
-            User u_check = userMapper.get(id);
-            if (u_check != null) {
-                feedBack(resp, 1);
-            } else {
+            //这里检查messageCode对不对
+            if(isMessageCodeTrue){
+                user.setId(id);
+                user.setPassword(md5);
+                userMapper.insert(user);
+                User u_check = userMapper.get(id);
+                if (u_check != null) {
+                    feedBack(resp, 1);
+                } else {
+                    feedBack(resp, 0);
+                }
+            }else {
                 feedBack(resp, 0);
+            }
+        }else if("1".equals(code)){//密码登录页面
+            String username = m.get("username").toString();
+            String password = m.get("md5").toString();
+
+            if(username != null){
+                // username Md5
+                User u_c = userMapper.get(Long.valueOf(username));
+                if (u_c != null) {
+                    if (password.equals(u_c.getPassword())) {
+                        feedBack(resp, 1);//如果账号和密码正确
+                    } else {
+                        feedBack(resp, 0);//如果密码不正确
+                    }
+                } else {
+                    feedBack(resp, 0);//如果账户不存在
+                }
+            }
+
+        }else if("2".equals(code)){//验证码登录页面
+            String username = m.get("messageCodeUserName").toString();//手机号
+            String messageCode = m.get("code").toString();//验证码
+            boolean isMessageCodeTrue =  false;
+            if(messageCode.equals("")){
+                isMessageCodeTrue = true;
+            }
+            //检查验证码是否正确
+            if(username != null && !StrUtil.isBlank(username) && isMessageCodeTrue){
+                User u_c = userMapper.get(Long.valueOf(username));
+                if(u_c != null){
+                    feedBack(resp, 1);//如果账号和密码正确
+                }else{
+                    feedBack(resp, 0);//如果不正确
+                }
+            } else{
+                feedBack(resp, 0);//如果不正确
             }
         }
 

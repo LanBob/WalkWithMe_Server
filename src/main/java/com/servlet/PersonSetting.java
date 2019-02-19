@@ -52,7 +52,20 @@ public class PersonSetting extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("login");
+//        System.out.println("login");
+        req.setCharacterEncoding("utf-8");
+        resp.setCharacterEncoding("utf-8");
+        PrintWriter pw;
+        pw = resp.getWriter();
+        String userId = req.getParameter("id");
+        PersonSettingDao dao = personSettingService.getById(userId);
+        ResponseResult<PersonSettingDao> daoResponseResult = new ResponseResult<>();
+        daoResponseResult.setData(dao);
+        daoResponseResult.setCode(1);
+        daoResponseResult.setMessage("1");
+        String json = JSONUtil.toJson(daoResponseResult);
+        System.out.println(json);
+        pw.write(json);
     }
 
     @Override
@@ -67,6 +80,7 @@ public class PersonSetting extends HttpServlet {
         result.setCode(1);
         result.setData("success");
         result.setMessage("ok");
+
         print = resp.getWriter();
         print.print(JSONUtil.toJson(result));
     }

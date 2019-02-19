@@ -8,4 +8,5 @@ import com.servlet.PersonSetting;
  */
 public interface IPersonSettingService {
     void insert(PersonSettingDao personSettingDao);
+    PersonSettingDao getById(String id);
 }

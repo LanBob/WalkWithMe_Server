@@ -12,6 +12,7 @@ import com.mapper.*;
 import com.service.IPersonSettingService;
 import com.servlet.ViewShow;
 import com.util.ContextUtil;
+import com.util.StrUtil;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -21,13 +22,14 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.StringUtils;
 
 //eyAibmFtZSI6InJ1bm9vYiIgLCAidXJsIjoid3d3LnJ1bm9vYi5jb20iIH0=
 //
 @Component
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:beans.xml")
-public class AppTest {
+public class AppTests {
 
     @Autowired
     public CollectionDao dao = null;
@@ -52,6 +54,11 @@ public class AppTest {
     private IPersonSettingService personSettingService;
 
     @Test
+    public void MessageOCed(){
+        System.out.println(StrUtil.getMessageCode());
+    }
+
+    @Test
     public void personSetting(){
         PersonSettingDao personSettingDao = new PersonSettingDao();
         personSettingDao.setCity("s");
@@ -68,12 +75,23 @@ public class AppTest {
 
     @Test
     public void isInte(){
-        String userName = "014586786098";
-        System.out.println(isInteger(userName));
+        String userName = "13756789459";
+        System.out.println(isMobile(userName));
     }
+
+    public boolean isMobile(final String str) {
+        Pattern p = null;
+        Matcher m = null;
+        boolean b = false;
+        p = Pattern.compile("^[1][3,4,5,7,8][0-9]{9}$"); // 验证手机号
+        m = p.matcher(str);
+        b = m.matches();
+        return b;
+    }
+
     public boolean isInteger(String str) {
         //加或减出现一次或者零次，然后数字出现任意次
-//        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+//        Pattern pattern = Pattern.compile("^[\\d]*$");
         Pattern pattern = Pattern.compile("^[\\d]*$");
         return pattern.matcher(str).matches();
     }
