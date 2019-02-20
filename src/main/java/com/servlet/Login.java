@@ -69,37 +69,28 @@ public class Login extends HttpServlet {
         resp.setCharacterEncoding("utf-8");
         String json = req.getParameter("data");
         String code = req.getParameter("code");
+        System.out.println(json);
+        System.out.println(code);
 
         Map m = JSONUtil.toMap(json);
-        if("0".equals(code)){//注册业务
+        if ("0".equals(code)) {//注册业务
             String username = m.get("username").toString();
-            String md5 = m.get("md5").toString();
-            String messageCode = m.get("messageCode").toString();
+            String md5 = m.get("password").toString();
             Long id = Long.valueOf(username);
-
-            boolean isMessageCodeTrue =  false;
-            if(messageCode.equals("")){
-                isMessageCodeTrue = true;
-            }
-            //这里检查messageCode对不对
-            if(isMessageCodeTrue){
-                user.setId(id);
-                user.setPassword(md5);
-                userMapper.insert(user);
-                User u_check = userMapper.get(id);
-                if (u_check != null) {
-                    feedBack(resp, 1);
-                } else {
-                    feedBack(resp, 0);
-                }
-            }else {
+            user.setId(id);
+            user.setPassword(md5);
+            userMapper.insert(user);
+            User u_check = userMapper.get(id);
+            if (u_check != null) {
+                feedBack(resp, 1);
+            } else {
                 feedBack(resp, 0);
             }
-        }else if("1".equals(code)){//密码登录页面
+        } else if ("1".equals(code)) {//密码登录页面
             String username = m.get("username").toString();
             String password = m.get("md5").toString();
 
-            if(username != null){
+            if (username != null) {
                 // username Md5
                 User u_c = userMapper.get(Long.valueOf(username));
                 if (u_c != null) {
@@ -113,23 +104,36 @@ public class Login extends HttpServlet {
                 }
             }
 
-        }else if("2".equals(code)){//验证码登录页面
-            String username = m.get("messageCodeUserName").toString();//手机号
-            String messageCode = m.get("code").toString();//验证码
-            boolean isMessageCodeTrue =  false;
-            if(messageCode.equals("")){
-                isMessageCodeTrue = true;
-            }
-            //检查验证码是否正确
-            if(username != null && !StrUtil.isBlank(username) && isMessageCodeTrue){
+        } else if ("2".equals(code)) {//验证码登录页面
+            String username = m.get("username").toString();//手机号
+
+            if (username != null && !StrUtil.isBlank(username)) {
                 User u_c = userMapper.get(Long.valueOf(username));
-                if(u_c != null){
-                    feedBack(resp, 1);//如果账号和密码正确
-                }else{
+                if (u_c != null) {
+                    feedBack(resp, 1);//如果存在该用户
+                } else {
                     feedBack(resp, 0);//如果不正确
                 }
-            } else{
+            } else {
                 feedBack(resp, 0);//如果不正确
+            }
+        }else if("3".equals(code)){//通过验证码修改密码
+            System.out.println("code " + code);
+
+            String username = m.get("username").toString();//手机号
+            String newPassWord = m.get("password").toString();
+            System.out.println("username " + username  + "passwrod " + newPassWord);
+//            User u = userMapper.get(Long.valueOf(username));
+            Long phone = Long.valueOf(username);
+            User u = new User();
+            u.setId(phone);
+            u.setPassword(newPassWord);
+            userMapper.change_password(u);
+            User newUser = userMapper.get(phone);
+            if(newUser.getPassword().equals(newPassWord)){
+                feedBack(resp, 1);//如果账号和密码正确
+            }else {
+                feedBack(resp, 0);//如果账号和密码正确
             }
         }
 

@@ -9,9 +9,11 @@ import java.util.regex.Pattern;
 
 import com.domain.*;
 import com.mapper.*;
+import com.service.IMessageCode;
 import com.service.IPersonSettingService;
 import com.servlet.ViewShow;
 import com.util.ContextUtil;
+import com.util.JSONUtil;
 import com.util.StrUtil;
 import org.junit.Test;
 
@@ -52,6 +54,18 @@ public class AppTests {
 
     @Autowired
     private IPersonSettingService personSettingService;
+
+    @Autowired
+    private IMessageCode messageCode;
+
+    @Test
+    public void getMessageCode(){
+        String s = messageCode.sendCodeToUser("13724158682");
+        System.out.println(s);
+        Map<String, Object> map = JSONUtil.toMap(s);
+        System.out.println(map);
+//        System.out.println(map.get(""));
+    }
 
     @Test
     public void MessageOCed(){

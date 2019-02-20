@@ -3,8 +3,10 @@ package com.service.impl;
 
 import com.service.IMessageCode;
 import com.util.HttpUtils;
+import com.util.JSONUtil;
 import com.util.StrUtil;
 import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -36,8 +38,8 @@ public class MessageCodeImpl implements IMessageCode {
         headers.put("Authorization", "APPCODE " + appcode);
         Map<String, String> querys = new HashMap<String, String>();
 
-
-        String content = "【walk旅游】 验证码为:"+ StrUtil.getMessageCode() + "，于3分钟内有效，请您牢记。";
+        String messageCode = StrUtil.getMessageCode();
+        String content = "【walk旅游】 验证码为:"+ messageCode + "，于3分钟内有效，请您牢记。";
         querys.put("content", content);
         querys.put("mobile", userPhone);
         Map<String, String> bodys = new HashMap<String, String>();
@@ -53,10 +55,13 @@ public class MessageCodeImpl implements IMessageCode {
              * https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/pom.xml
              */
             HttpResponse response = HttpUtils.doPost(host, path, method, headers, querys, bodys);
-            System.out.println(response.toString());
-            return response.toString();
+            String entity = EntityUtils.toString(response.getEntity());
+            Map<String, Object> map = JSONUtil.toMap(entity);
+            System.out.println(entity);
+            if("Success".equals(map.get("ReturnStatus"))){//成功
+                return messageCode;
+            }
             //获取response的body
-            //System.out.println(EntityUtils.toString(response.getEntity()));
         } catch (Exception e) {
             e.printStackTrace();
         }
