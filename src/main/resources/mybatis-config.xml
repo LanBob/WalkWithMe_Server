@@ -53,6 +53,7 @@
 		<mapper resource="com/mapper/X_Star_mapper.xml" />
 		<mapper resource="com/mapper/X_Collection_mapper.xml" />
 		<mapper resource="com/mapper/X_Star_collection_mapper.xml" />
+		<mapper resource="com/mapper/X_HeadImage_mapper.xml" />
 	</mappers>
 
 </configuration>

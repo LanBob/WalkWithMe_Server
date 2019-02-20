@@ -1,7 +1,9 @@
 package com.servlet;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -13,9 +15,14 @@ import javax.servlet.http.HttpServletResponse;
 import com.domain.PersonSettingDao;
 import com.domain.ResponseResult;
 import com.mapper.PersonSettingMapper;
+import com.service.IHeadImageService;
 import com.service.IPersonSettingService;
 import com.util.JSONUtil;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -29,6 +36,9 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 @Component
 @WebServlet("/app/person_setting")
 public class PersonSetting extends HttpServlet {
+//
+//    //获得磁盘文件条目工厂
+//    DiskFileItemFactory factory;
 
     @Autowired
     private PersonSettingDao person_settingDao;
@@ -80,30 +90,14 @@ public class PersonSetting extends HttpServlet {
         result.setCode(1);
         result.setData("success");
         result.setMessage("ok");
-
+//        save(req,resp,person_settingDao.getPhone_num());
         print = resp.getWriter();
         print.print(JSONUtil.toJson(result));
     }
 
-    /*
-        private void insert(Person_setting_dao dao) {
-            // 修改
-            @Cleanup
-            SqlSession session = MyBatisUtil.getSession();
-            Person_setting_mapper mapper = session.getMapper(Person_setting_mapper.class);
-            mapper.update(dao);
-            session.commit();
-        }
 
-        private void update(Person_setting_dao dao) {
-            // 增加
-            @Cleanup
-            SqlSession session = MyBatisUtil.getSession();
-            Person_setting_mapper mapper = session.getMapper(Person_setting_mapper.class);
-            mapper.update(dao);
-            session.commit();
-        }
-    */
+
+
     private boolean check_token(String token) {
         if ("token".equals(token)) {
             return true;

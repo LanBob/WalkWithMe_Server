@@ -22,7 +22,12 @@ public class PersonSettingServiceImpl implements IPersonSettingService {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     @Override
     public void insert(PersonSettingDao personSettingDao) {
-        personSettingMapper.insert(personSettingDao);
+        PersonSettingDao dao = personSettingMapper.get(personSettingDao.getId());
+        if(dao ==  null || dao.getPhone_num() == null){
+            personSettingMapper.insert(personSettingDao);
+        }else {
+            personSettingMapper.update(personSettingDao);
+        }
     }
 
     @Override

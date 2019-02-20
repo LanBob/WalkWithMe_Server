@@ -130,7 +130,7 @@ public class ViewShow extends HttpServlet {
                 if (item.isFormField()) {
                     //获取用户具体输入的字符串,因为表单提交过来的是 字符串类型的   
                     String json = item.getString();
-                    System.out.println(json);
+//                    System.out.println(json);
                     view_showDao = JSONUtil.toBean(json, ViewShowDao.class);//转为dao类型
                     System.out.println(view_showDao.toString());
                     save_view_show_dao(view_showDao);//保存操作

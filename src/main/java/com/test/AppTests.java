@@ -9,8 +9,10 @@ import java.util.regex.Pattern;
 
 import com.domain.*;
 import com.mapper.*;
+import com.service.IHeadImageService;
 import com.service.IMessageCode;
 import com.service.IPersonSettingService;
+import com.service.impl.HeadImageImpl;
 import com.servlet.ViewShow;
 import com.util.ContextUtil;
 import com.util.JSONUtil;
@@ -57,6 +59,16 @@ public class AppTests {
 
     @Autowired
     private IMessageCode messageCode;
+    @Autowired
+    private IHeadImageService headImageService;
+
+    @Test
+    public void HeadImage(){
+        HeadImage headImage = headImageService.get("13424158682");
+        headImage.setId("45");
+        headImageService.insert(headImage);
+        System.out.println(headImage);
+    }
 
     @Test
     public void getMessageCode(){
