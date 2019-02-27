@@ -25,6 +25,7 @@ import com.mapper.StarCollectionMapper;
 import com.mapper.StarMapper;
 import com.mapper.UserFollowMapper;
 import com.service.*;
+import com.service.impl.StarCollectionServiceImpl;
 import com.sun.tracing.dtrace.Attributes;
 import com.util.JSONUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +51,6 @@ public class FollowCollection extends HttpServlet {
     private IStarService starService;
 
     @Autowired
-    List<FindViewDao> find_viewDao_list;
-
-    @Autowired
     private IFindViewService findViewService;
 
     @Autowired
@@ -64,8 +62,6 @@ public class FollowCollection extends HttpServlet {
     @Autowired
     private IUserFollowService userFollowService;
 
-    @Autowired
-    private List<PersonDao> list_person;
 
     @Autowired
     private IPersonDaoService personDaoService;
@@ -92,6 +88,14 @@ public class FollowCollection extends HttpServlet {
                 config.getServletContext());
     }
 
+    /**
+     * code = 3,Follow
+     *
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
     // 只处理get请求
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -99,9 +103,11 @@ public class FollowCollection extends HttpServlet {
         int code = -1;
         req.setCharacterEncoding("utf-8");
         resp.setCharacterEncoding("utf-8");
+
         String follower = req.getParameter("userId");
         String c = req.getParameter("code");
         String v_id = req.getParameter("view_show_id");
+
         Long view_show_id = 0L;
 
         if (follower != null) {
@@ -117,10 +123,16 @@ public class FollowCollection extends HttpServlet {
         PrintWriter pw = null;
         if (code == 0) {// star:Parameters:uerId,code=0
             List<Long> list_view_show_id = starService.listStarViewShowIdByUserId(userID);
+            List<FindViewDao> find_viewDao_list = new ArrayList<>();
+            System.out.println("star拥有以下几个");
+            for (Long da : list_view_show_id) {
+                System.out.println(da);
+            }
             // =================得到这个view_show_id
             for (Long long1 : list_view_show_id) {
                 FindViewDao dao = findViewService.get_by_view_showID(long1);
-                find_viewDao_list.add(dao);
+                if (!find_viewDao_list.contains(dao))
+                    find_viewDao_list.add(dao);
             }
             rs.setCode(1);
             rs.setData(find_viewDao_list);
@@ -129,11 +141,18 @@ public class FollowCollection extends HttpServlet {
             pw.print(JSONUtil.toJson(rs));
 //				pw.close();
         } else if (code == 1) {// collection:Parameters:code=1,UserID
-
             List<Long> collection_list = collectionService.list_collection(userID);
+            List<FindViewDao> find_viewDao_list = new ArrayList<>();
+
+            System.out.println("collection");
+            for (Long da : collection_list) {
+                System.out.println(da);
+            }
+
             for (Long long1 : collection_list) {
                 FindViewDao dao = findViewService.get_by_view_showID(long1);
-                find_viewDao_list.add(dao);
+                if (!find_viewDao_list.contains(dao))
+                    find_viewDao_list.add(dao);
             }
             rs.setCode(1);
             rs.setData(find_viewDao_list);
@@ -141,10 +160,20 @@ public class FollowCollection extends HttpServlet {
             pw = resp.getWriter();
             pw.print(JSONUtil.toJson(rs));
         } else if (code == 3) {// 关注:Parameter:code=3,userId
+
             List<Long> list_followed_id = userFollowService.get_followed_id(userID);
+            List<PersonDao> list_person = new ArrayList<>();
+            System.out.println("关注");
+            for (Long da : list_followed_id) {
+                System.out.println(da);
+            }
             for (Long long1 : list_followed_id) {
                 PersonDao dao = personDaoService.get(long1);
-                list_person.add(dao);
+                if (!list_person.contains(dao)){
+                    list_person.add(dao);
+                    System.out.println("sout " + dao);
+                }
+
             }
             personResult.setCode(1);
             personResult.setData(list_person);
@@ -182,6 +211,7 @@ public class FollowCollection extends HttpServlet {
         String who_collection = req.getParameter("who_collection");
         String follower = req.getParameter("follower");
         String followed = req.getParameter("followed");
+
         String c = req.getParameter("code");
 
         if (c != null) {
@@ -209,6 +239,7 @@ public class FollowCollection extends HttpServlet {
                 else {
                     Long who_collect = 1L;
                     CollectionDao dao = new CollectionDao();// 取决于View_show_id 和who
+                    System.out.println(who_collection);
                     if (who_collection != null)
                         who_collect = Long.valueOf(who_collection);
                     if (code == 1) {// insert :Parameters:view_show_id,who_cellection,code == 1
@@ -237,13 +268,13 @@ public class FollowCollection extends HttpServlet {
                 if (followed != null)
                     foed = Long.valueOf(followed);
                 if (code == 1) {// insert:parameters:follower，followed，code ==1
-                    user_followDao.setFollowed(115L);
-                    user_followDao.setFollower(116L);
+                    user_followDao.setFollowed(foed);
+                    user_followDao.setFollower(foer);
                     userFollowService.insert(user_followDao);
                 } else {// delete：parameters:follower，followed，code ==0
                     Map map = new HashMap<>();
-                    map.put("follower", 116L);
-                    map.put("followed", 115L);
+                    map.put("follower", foed);
+                    map.put("followed", foer);
                     userFollowService.delete(map);
                 }
             }

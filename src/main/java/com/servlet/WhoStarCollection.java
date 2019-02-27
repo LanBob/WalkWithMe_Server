@@ -20,8 +20,10 @@ import com.mapper.CollectionMapper;
 import com.mapper.StarMapper;
 import com.mapper.UserFollowMapper;
 import com.service.ICollectionService;
+import com.service.IFindViewService;
 import com.service.IStarService;
 import com.service.IUserFollowService;
+import com.service.impl.FindViewServiceImpl;
 import com.util.JSONUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,9 @@ public class WhoStarCollection extends HttpServlet {
     private IUserFollowService userFollowService;
 
     private static final long serialVersionUID = 1L;
+
+    @Autowired
+    private IFindViewService findViewService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {

@@ -1,17 +1,13 @@
 package com.test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.domain.*;
 import com.mapper.*;
-import com.service.IHeadImageService;
-import com.service.IMessageCode;
-import com.service.IPersonSettingService;
+import com.service.*;
 import com.service.impl.HeadImageImpl;
 import com.servlet.ViewShow;
 import com.util.ContextUtil;
@@ -62,6 +58,80 @@ public class AppTests {
     @Autowired
     private IHeadImageService headImageService;
 
+    @Autowired
+    private ICommentService commentService;
+
+    @Autowired
+    private IFeedBackService feedBackService;
+
+    @Test
+    public void viewshwo(){
+        List<ViewShowDao> viewShowDao = viewShowMapper.searchByKeyWord("北京");
+//        viewShowDao.setId(158L);
+//        viewShowMapper.insert(viewShowDao);
+        System.out.println(viewShowDao.size());
+    }
+
+
+    @Test
+    public void feeed(){
+        String userId = "135";
+        List<FeedBackDao> list = feedBackService.getFeedBackListByUserId(userId);
+        for (FeedBackDao da :
+                list) {
+            System.out.println(da);
+        }
+    }
+    @Test
+    public void feed(){
+        FeedBackDao feedBackDao = new FeedBackDao();
+        feedBackDao.setUserId("135");
+        feedBackDao.setContent("ss");
+        feedBackDao.setTitle("55");
+        feedBackService.insert(feedBackDao);
+    }
+
+
+    @Test
+    public void millToTime(){
+        String mill = String.valueOf(System.currentTimeMillis());
+        System.out.println(mill);
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String sd = sdf.format(new Date(Long.parseLong(mill)));
+        System.out.println(sd);
+    }
+
+    @Test
+    public void Comment1(){
+        List<CommentDao> list = commentService.getCommentByViewShowId("44");
+        for (CommentDao dao :
+                list) {
+            System.out.println(list);
+        }
+    }
+
+    @Test
+    public void Comment(){
+        CommentDao commentDao = new CommentDao();
+        commentDao.setComment("11");
+        commentDao.setDefaultImage("ss");
+        commentDao.setMytime("s");
+        commentDao.setUserId("ss");
+        commentDao.setViewShowId("44");
+        commentDao.setUserName("aaa");
+        commentService.insert(commentDao);
+    }
+
+
+    @Test
+    public void myFindViewMapper(){
+        List<FindViewDao>  list = findViewMapper.get_list_by_userId("13724158682");
+        for (FindViewDao da :
+                list) {
+            System.out.println(da);
+        }
+        System.out.println(list.size());
+    }
     @Test
     public void HeadImage(){
         HeadImage headImage = headImageService.get("13424158682");
@@ -146,7 +216,6 @@ public class AppTests {
     public void Search(){
         ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
         List<ViewShowDao> list = (List<ViewShowDao>) viewShowMapper.searchByKeyWord("北京");
-
         for (ViewShowDao dao : list) {
             System.out.println(dao);
         }

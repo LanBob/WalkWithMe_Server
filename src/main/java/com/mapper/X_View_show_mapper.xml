@@ -11,12 +11,12 @@
 		<result column="title" property="title"/>
 		<result column="introduce" property="introduce"/>
 		<result column="city" property="city"/>
-		<result column="star" property="star"/>
+		<!--<result column="star" property="star"/>-->
 		<result column="user_id" property="user_id"/>
 		<result column="type" property="type"/>
 		<result column="money" property="money"/>
-		<result column="collection" property="collection"/>
-		<result column="interest" property="interest"/>
+		<!--<result column="collection" property="collection"/>-->
+		<!--<result column="interest" property="interest"/>-->
 		<result column="defaultpath" property="defaultpath"/>
 	</resultMap>
 	
@@ -24,14 +24,14 @@
 		insert into 
 		<choose>
             <when test="id == null">
-            	view_show(title,introduce,city,star,user_id,type,money,collection,interest,defaultpath)
-            	values(#{title},#{introduce},#{city},#{star},#{user_id}
-            	,#{type},#{money},#{collection},#{interest},#{defaultpath})
+            	view_show(title,introduce,city,user_id,type,money,defaultpath)
+            	values(#{title},#{introduce},#{city},#{user_id}
+            	,#{type},#{money},#{defaultpath})
             </when>
             <otherwise>
-            	view_show(id,title,introduce,city,star,user_id,type,money,collection,interest,defaultpath)
-            	values(#{id},#{title},#{introduce},#{city},#{star},#{user_id}
-            	,#{type},#{money},#{collection},#{interest},#{defaultpath})
+            	view_show(id,title,introduce,city,user_id,type,money,defaultpath)
+            	values(#{id},#{title},#{introduce},#{city},#{user_id}
+            	,#{type},#{money},#{defaultpath})
             </otherwise>
         </choose>
 	</insert>

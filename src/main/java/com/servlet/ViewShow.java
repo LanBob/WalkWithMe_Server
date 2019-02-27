@@ -56,6 +56,7 @@ public class ViewShow extends HttpServlet {
     @Autowired
     private IViewShowService viewShowService;
 
+    @Autowired
     private IFindViewService findViewService;
 
     @Autowired
@@ -152,7 +153,8 @@ public class ViewShow extends HttpServlet {
             }
 
         } catch (Exception e) {
-            System.out.println("上传失败");
+            System.out.println("上传失败" + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -161,7 +163,8 @@ public class ViewShow extends HttpServlet {
         find_viewDao.setId(dao.getId());
         find_viewDao.setCity(dao.getCity());
         find_viewDao.setMoney(dao.getMoney());
-        find_viewDao.setStar(dao.getStar());
+//        find_viewDao.setStar(dao.getStar());
+        find_viewDao.setStar(0);
         find_viewDao.setTitle(dao.getTitle());
         find_viewDao.setType(dao.getType());
         find_viewDao.setUser_id(dao.getUser_id());

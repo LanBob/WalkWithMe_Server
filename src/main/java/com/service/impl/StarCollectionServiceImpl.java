@@ -2,6 +2,8 @@ package com.service.impl;
 
 import com.domain.StarCollectionDao;
 import com.mapper.StarCollectionMapper;
+import com.service.IFindItemService;
+import com.service.IFindViewService;
 import com.service.IStarCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,9 @@ public class StarCollectionServiceImpl implements IStarCollectionService {
     @Autowired
     private StarCollectionMapper starCollectionMapper;
 
+    @Autowired
+    private IFindViewService findViewService;
+
     @Override
     public StarCollectionDao get(Long viewShowId) {
         return starCollectionMapper.get(viewShowId);
@@ -25,12 +30,14 @@ public class StarCollectionServiceImpl implements IStarCollectionService {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     @Override
     public int update_add_star(Long viewShowId) {
+        findViewService.addStar(viewShowId);
         return starCollectionMapper.update_add_star(viewShowId);
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     @Override
     public int update_sub_star(Long viewShowId) {
+        findViewService.subStar(viewShowId);
         return starCollectionMapper.update_sub_star(viewShowId);
     }
 

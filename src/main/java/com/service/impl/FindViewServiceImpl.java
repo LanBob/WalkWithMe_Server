@@ -27,4 +27,16 @@ public class FindViewServiceImpl implements IFindViewService {
     public int insert(FindViewDao findViewDao) {
         return findViewMapper.insert(findViewDao);
     }
+
+    @Override
+    public int addStar(Long id) {
+        return findViewMapper.addStar(id);
+    }
+
+    @Override
+    public int subStar(Long id) {
+        return findViewMapper.subStar(id);
+    }
+
+
 }

@@ -49,8 +49,14 @@
     <insert id="insert">
     insert into	find_view(title,city,user_id,type,money,id,star,defaultpath)
     values(#{title},#{city},#{user_id},#{type},#{money},#{id},#{star},#{defaultpath})
-    </insert>	
-    
-    
+    </insert>
+
+	<update id="addStar">
+		UPDATE find_view SET star = star + 1 WHERE  id= #{id}
+	</update>
+
+	<update id="subStar">
+		UPDATE find_view SET star = star - 1 WHERE  id= #{id}
+	</update>
 	
 </mapper>

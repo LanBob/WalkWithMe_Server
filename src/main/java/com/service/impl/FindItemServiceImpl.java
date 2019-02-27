@@ -21,10 +21,15 @@ public class FindItemServiceImpl implements IFindItemService {
 
     @Override
     public List<FindViewDao> getFindViewByType(int type) {
-        List<FindViewDao> list = mapper.get_list_by_type(type);
-        for (FindViewDao findViewDao : list) {
-            System.out.println(findViewDao.toString());
-        }
-        return list;
+//        List<FindViewDao> list = mapper.get_list_by_type(type);
+//        for (FindViewDao findViewDao : list) {
+//            System.out.println(findViewDao.toString());
+//        }
+        return mapper.get_list_by_type(type);
+    }
+
+    @Override
+    public List<FindViewDao> getFindViewByUserId(String userId) {
+        return mapper.get_list_by_userId(userId);
     }
 }

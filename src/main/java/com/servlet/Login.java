@@ -79,9 +79,19 @@ public class Login extends HttpServlet {
             Long id = Long.valueOf(username);
             user.setId(id);
             user.setPassword(md5);
-            userMapper.insert(user);
-            User u_check = userMapper.get(id);
-            if (u_check != null) {
+            User u_check = null;
+
+            //如果已经存在，注册失败
+            User u = userMapper.get(id);
+            if(u != null){
+                if(u.getPassword() != null){
+                    feedBack(resp,0);//失败
+                }
+            }else {//否则注册成功
+                userMapper.insert(user);
+                u_check = userMapper.get(id);
+            }
+            if (u_check != null) {//如果再次获取成功，返货成功
                 feedBack(resp, 1);
             } else {
                 feedBack(resp, 0);

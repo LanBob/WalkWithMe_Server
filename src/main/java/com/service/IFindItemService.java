@@ -9,4 +9,5 @@ import java.util.List;
  */
 public interface IFindItemService {
     List<FindViewDao> getFindViewByType(int type);
+    List<FindViewDao> getFindViewByUserId(String uerId);
 }

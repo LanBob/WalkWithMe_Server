@@ -16,4 +16,7 @@ public interface IFindViewService {
 
     int insert(FindViewDao findViewDao);
 
+    int addStar(Long id);
+
+    int subStar(Long id);
 }

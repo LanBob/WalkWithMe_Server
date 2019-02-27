@@ -58,18 +58,31 @@ public class FindItemServlet extends HttpServlet {
 //		result = ContextUtil.getBean(ResponseResult.class);
         Map map = getHeadersInfo(req);
         resp.setCharacterEncoding("utf-8");
+        req.setCharacterEncoding("utf-8");
         System.out.println(map);
-        int type = Integer.valueOf(req.getParameter("type"));
-        PrintWriter pw = null;
-        List<FindViewDao> list = findItemService.getFindViewByType(type);
-        result.setCode(1);
-        result.setMessage("success");
-        result.setData(list);
-        resp.setCharacterEncoding("utf-8");
-        pw = resp.getWriter();
-        pw.print(JSONUtil.toJson(result));
+        String types = req.getParameter("type");
+        String userId = req.getParameter("userId");
+        System.out.println("type" + types + "userId" + userId);
+        if(types != null){
+            int type = Integer.valueOf(types);
+            PrintWriter pw = null;
+            List<FindViewDao> list = findItemService.getFindViewByType(type);
+            result.setCode(1);
+            result.setMessage("success");
+            result.setData(list);
+            pw = resp.getWriter();
+            pw.print(JSONUtil.toJson(result));
+        }else if(userId != null){
+            List<FindViewDao> ownList = findItemService.getFindViewByUserId(userId);
+            result.setCode(1);
+            result.setMessage("success");
+            result.setData(ownList);
+            PrintWriter pw = null;
+            pw = resp.getWriter();
+            pw.print(JSONUtil.toJson(result));
+        }
 //			logger.info("list " + result.getData());
-        System.out.println("list " + result.getData());
+//        System.out.println("list " + result.getData());
     }
 
     @Override

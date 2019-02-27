@@ -54,6 +54,8 @@
 		<mapper resource="com/mapper/X_Collection_mapper.xml" />
 		<mapper resource="com/mapper/X_Star_collection_mapper.xml" />
 		<mapper resource="com/mapper/X_HeadImage_mapper.xml" />
+		<mapper resource="com/mapper/X_Comment_mapper.xml" />
+		<mapper resource="com/mapper/X_FeedBack_mapper.xml" />
 	</mappers>
 
 </configuration>

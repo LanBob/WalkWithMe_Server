@@ -20,8 +20,8 @@ public class ViewShowDao {
 	private BigDecimal money;
 	
 	private Long id;
-	private int star;
-	private int collection;
-	private int interest;
+//	private int star;
+//	private int collection;
+//	private int interest;
 	private String defaultpath;
 }

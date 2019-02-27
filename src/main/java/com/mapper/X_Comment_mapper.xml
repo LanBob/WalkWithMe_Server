@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- 这里对用接口的名称 -->
+<mapper namespace="com.mapper.CommentMapper">
+
+	<!-- 需要解决的问题是：这里java代码的名称或者 dao的属性名
+	和sql数据库的列名不相同的时候，应该怎么解决？使用resultMap    结果集和对象的映射
+	id： Mapper文件中resultMap中的唯一名称
+	type:把结果集中的每一行封装成什么类型的对象
+			子元素：result
+	-->
+	<!-- column是数据库的列名。而property是对象 -->
+	<resultMap type="CommentDao" id="commentDao">
+
+		<result column="userId" property="userId"/>
+		<result column="viewShowId" property="viewShowId"/>
+		<result column="defaultImage" property="defaultImage"/>
+		<result column="userName" property="userName"/>
+		<result column="mytime" property="mytime"/>
+		<result column="comment" property="comment"/>
+	</resultMap>
+
+
+	<select id="getCommentByViewShowId" resultMap="commentDao">
+		select * from comment where viewShowId =
+		#{viewShowId}
+	</select>
+
+	<insert id="insert" >
+		INSERT ignore INTO
+		comment(userId,viewShowId,defaultImage,userName,mytime,comment)
+		VALUES(#{userId},#{viewShowId},#{defaultImage},#{userName},#{mytime},#{comment})
+	</insert>
+</mapper>
