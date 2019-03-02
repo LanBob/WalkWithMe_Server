@@ -24,4 +24,5 @@ public class ViewShowDao {
 //	private int collection;
 //	private int interest;
 	private String defaultpath;
+	private String myTime;
 }

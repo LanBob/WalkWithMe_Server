@@ -1,5 +1,6 @@
 package com.test;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -45,10 +46,15 @@ public class AppTests {
     private StarMapper starMapper;
     @Autowired
     private UserFollowMapper userFollowMapper;
+
+//    @2
     @Autowired
     private UserMapper userMapper;
     @Autowired
     private ViewShowMapper viewShowMapper;
+
+    @Autowired
+    private IViewShowService viewShowService;
 
     @Autowired
     private IPersonSettingService personSettingService;
@@ -63,6 +69,67 @@ public class AppTests {
 
     @Autowired
     private IFeedBackService feedBackService;
+
+    @Autowired
+    private IIsGoodManService iIsGoodManService;
+
+
+    @Test
+    public void s(){
+        String a = StrUtil.toMD5("lj1158");
+        System.out.println(a);
+    }
+
+
+    @Test
+    public void ss(){
+//        IsGoodMan isGoodMan = new IsGoodMan();
+//        isGoodMan.setUserName("alian");
+//        isGoodMan.setAge("16");
+//        isGoodMan.setIntroduce("sfaa");
+//        isGoodMan.setSex("男");
+//        isGoodMan.setUserId("11578");
+//        IsGoodMan isGoodMan = iIsGoodManService.get("1158");
+//        System.out.println(isGoodMan);
+//        iIsGoodManService.delete("1158");
+
+        List<IsGoodMan> list = iIsGoodManService.listAllAlreadyScore();
+        for (IsGoodMan os :
+                list) {
+            System.out.println(os);
+        }
+    }
+    @Test
+    public void t(){
+        String money = "1.0";
+        if(isBigDecimal(money)){
+            BigDecimal bigDecimal = new BigDecimal(money);
+            System.out.println(bigDecimal);
+        }
+    }
+    public static boolean isBigDecimal(String str){
+        if(str==null || str.trim().length() == 0){
+            return false;
+        }
+        char[] chars = str.toCharArray();
+        int sz = chars.length;
+        int i = (chars[0] == '-') ? 1 : 0;
+        if(i == sz) return false;
+
+        if(chars[i] == '.') return false;//除了负号，第一位不能为'小数点'
+
+        boolean radixPoint = false;
+        for(; i < sz; i++){
+            if(chars[i] == '.'){
+                if(radixPoint) return false;
+                radixPoint = true;
+            }else if(!(chars[i] >= '0' && chars[i] <= '9')){
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     @Test
     public void viewshwo(){
@@ -214,11 +281,12 @@ public class AppTests {
 
     @Test
     public void Search(){
-        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
-        List<ViewShowDao> list = (List<ViewShowDao>) viewShowMapper.searchByKeyWord("北京");
-        for (ViewShowDao dao : list) {
-            System.out.println(dao);
-        }
+//        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        ViewShowDao list = viewShowMapper.get(1271182437L);
+        System.out.println(list);
+//        for (ViewShowDao dao : list) {
+//            System.out.println(dao);
+//        }
     }
 
     @Test

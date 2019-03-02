@@ -30,6 +30,7 @@ import com.mapper.FindViewMapper;
 import com.mapper.StarCollectionMapper;
 import com.mapper.ViewShowMapper;
 import com.util.JSONUtil;
+import org.apache.commons.lang.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -160,6 +161,11 @@ public class ViewShow extends HttpServlet {
 
 
     private void save_view_show_dao(ViewShowDao dao) {
+        String currentTime = String.valueOf(System.currentTimeMillis());
+        dao.setMyTime(currentTime);
+
+        //保存这个
+        viewShowService.insert(dao);
         find_viewDao.setId(dao.getId());
         find_viewDao.setCity(dao.getCity());
         find_viewDao.setMoney(dao.getMoney());
@@ -169,7 +175,6 @@ public class ViewShow extends HttpServlet {
         find_viewDao.setType(dao.getType());
         find_viewDao.setUser_id(dao.getUser_id());
         find_viewDao.setDefaultpath(dao.getDefaultpath());
-        viewShowService.insert(dao);
         save_find_view_dao(find_viewDao);
     }
 

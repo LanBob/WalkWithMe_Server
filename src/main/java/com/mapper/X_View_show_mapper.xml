@@ -18,6 +18,7 @@
 		<!--<result column="collection" property="collection"/>-->
 		<!--<result column="interest" property="interest"/>-->
 		<result column="defaultpath" property="defaultpath"/>
+		<result column="mytime" property="myTime"/>
 	</resultMap>
 	
 	<insert id="insert">

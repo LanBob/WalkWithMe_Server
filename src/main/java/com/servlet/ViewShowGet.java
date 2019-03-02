@@ -54,6 +54,7 @@ public class ViewShowGet extends HttpServlet {
         Long id = Long.valueOf(req.getParameter("id"));
         PrintWriter pw = null;
         dao = viewShowService.get(id);
+        System.out.println(dao);
         String json = JSONUtil.toJson(dao);
         view_show_daoResponseResult.setCode(1);
         view_show_daoResponseResult.setMessage("success");

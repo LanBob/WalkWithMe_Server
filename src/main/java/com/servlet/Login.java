@@ -66,6 +66,7 @@ public class Login extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
         resp.setCharacterEncoding("utf-8");
         String json = req.getParameter("data");
         String code = req.getParameter("code");

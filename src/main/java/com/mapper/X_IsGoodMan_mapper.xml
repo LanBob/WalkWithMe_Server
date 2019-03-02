@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- 这里对用接口的名称 -->
+<mapper namespace="com.mapper.IsGoodManMapper">
+
+	<!-- 需要解决的问题是：这里java代码的名称或者 dao的属性名
+	和sql数据库的列名不相同的时候，应该怎么解决？使用resultMap    结果集和对象的映射
+	id： Mapper文件中resultMap中的唯一名称
+	type:把结果集中的每一行封装成什么类型的对象
+			子元素：result
+	-->
+	<!-- column是数据库的列名。而property是对象 -->
+	<resultMap type="IsGoodMan" id="isGoodMan">
+		<result column="userId" property="userId"/>
+		<result column="userName" property="userName"/>
+		<result column="age" property="age"/>
+		<result column="sex" property="sex"/>
+		<result column="introduce" property="introduce"/>
+		<result column="score" property="score"/>
+	</resultMap>
+
+
+	<select id="listAllNotScore" resultMap="isGoodMan">
+		SELECT * from is_good_man where score <![CDATA[ >= ]]> 0 and score <![CDATA[ <= ]]> 59;
+	</select>
+
+	<select id="listAllAlreadyScore" resultMap="isGoodMan">
+		SELECT * from is_good_man where score <![CDATA[ >= ]]> 60
+	</select>
+
+	<select id="get" resultMap="isGoodMan">
+		select * from is_good_man where userId = #{userId}
+	</select>
+
+
+	<insert id="insert">
+		insert into is_good_man(userId,userName,age,sex,introduce,score)
+		values(#{userId},#{userName},#{age},#{sex},#{introduce},#{score});
+	</insert>
+
+	<update id="update">
+		UPDATE  is_good_man SET userName = #{userName},age=#{age},
+		sex=#{sex},introduce=#{introduce},score=#{score} where userId =#{userId}
+	</update>
+	
+	<delete id="delete">
+		delete from is_good_man where userId=#{userId}
+	</delete>
+
+</mapper>
