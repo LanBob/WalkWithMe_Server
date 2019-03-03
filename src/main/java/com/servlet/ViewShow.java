@@ -15,17 +15,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.domain.*;
 import com.service.IFindViewService;
+import com.service.IInterScoreService;
 import com.service.IStarCollectionService;
 import com.service.IViewShowService;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import com.domain.FindViewDao;
-import com.domain.ResponseResult;
-import com.domain.StarCollectionDao;
-import com.domain.ViewShowDao;
 import com.mapper.FindViewMapper;
 import com.mapper.StarCollectionMapper;
 import com.mapper.ViewShowMapper;
@@ -66,6 +64,9 @@ public class ViewShow extends HttpServlet {
     @Autowired
     private IStarCollectionService starCollectionService;
 
+    @Autowired
+    private IInterScoreService interScoreService;
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
@@ -75,13 +76,46 @@ public class ViewShow extends HttpServlet {
     // 只处理get请求
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+//        super.doGet(req, resp);
+//        1、个人中心，进行查询自己的ViewShow的状态,根据Score进行显示
+//        2、管理员查询，对是60-100分的项目进行查询
+//        3、给予相互导游验证的随机查询，查询拥有的一个人
+        req.setCharacterEncoding("utf-8");
+        resp.setCharacterEncoding("utf-8");
+        String code = req.getParameter("code");
+
+        if("0".equals(code)){
+//            管理员进行查询60-100分之间的ViewShow
+            ResponseResult<List<ViewShowDao>> responseResult = new ResponseResult<>();
+            List<ViewShowDao> list = viewShowService.getViewShowAlreadyScoreByOthers();
+            responseResult.setData(list);
+            responseResult.setCode(1);
+            responseResult.setMessage("ok");
+            PrintWriter printWriter = resp.getWriter();
+            printWriter.write(JSONUtil.toJson(responseResult));
+        }else if("1".equals(code)){
+//            个人中心进行查询
+            String userId = req.getParameter("userId");
+            System.out.println("1" +userId);
+            ResponseResult<List<ViewShowDao>> responseResult = new ResponseResult<>();
+            List<ViewShowDao> list = viewShowService.getViewShowByUserId(userId);
+            responseResult.setData(list);
+            responseResult.setCode(1);
+            responseResult.setMessage("ok");
+            PrintWriter printWriter = resp.getWriter();
+            printWriter.write(JSONUtil.toJson(responseResult));
+        }else if("2".equals(code)){
+//          进行评分操作，并将开放findView
+
+
+        }
     }
 
     // 只处理POST请求
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
         resp.setCharacterEncoding("utf-8");
         PrintWriter pw = null;
         try {
@@ -134,7 +168,7 @@ public class ViewShow extends HttpServlet {
                     String json = item.getString();
 //                    System.out.println(json);
                     view_showDao = JSONUtil.toBean(json, ViewShowDao.class);//转为dao类型
-                    System.out.println(view_showDao.toString());
+//                    System.out.println(view_showDao.toString());
                     save_view_show_dao(view_showDao);//保存操作
                 } else {
                     //获取路径名    
@@ -163,33 +197,40 @@ public class ViewShow extends HttpServlet {
     private void save_view_show_dao(ViewShowDao dao) {
         String currentTime = String.valueOf(System.currentTimeMillis());
         dao.setMyTime(currentTime);
-
         //保存这个
         viewShowService.insert(dao);
-        find_viewDao.setId(dao.getId());
-        find_viewDao.setCity(dao.getCity());
-        find_viewDao.setMoney(dao.getMoney());
-//        find_viewDao.setStar(dao.getStar());
-        find_viewDao.setStar(0);
-        find_viewDao.setTitle(dao.getTitle());
-        find_viewDao.setType(dao.getType());
-        find_viewDao.setUser_id(dao.getUser_id());
-        find_viewDao.setDefaultpath(dao.getDefaultpath());
-        save_find_view_dao(find_viewDao);
+
+        InterScore interScore = new InterScore();
+        interScore.setUserId(String.valueOf(dao.getUser_id()));
+        String id = String.valueOf(dao.getId());
+        interScore.setViewShowId(id);
+        interScoreService.insert(interScore);
+//完成任务
+
+//        find_viewDao.setId(dao.getId());
+//        find_viewDao.setCity(dao.getCity());
+//        find_viewDao.setMoney(dao.getMoney());
+////        find_viewDao.setStar(dao.getStar());
+//        find_viewDao.setStar(0);
+//        find_viewDao.setTitle(dao.getTitle());
+//        find_viewDao.setType(dao.getType());
+//        find_viewDao.setUser_id(dao.getUser_id());
+//        find_viewDao.setDefaultpath(dao.getDefaultpath());
+//        save_find_view_dao(find_viewDao);
     }
 
-    private void save_find_view_dao(FindViewDao find_viewDao) {
-        findViewService.insert(find_viewDao);
-        star_collectionDao.setView_show_id(find_viewDao.getId());
-        star_collectionDao.setStar(0);
-        star_collectionDao.setCollection(0);
-        save_star_collection(star_collectionDao);
-    }
-
-
-    private void save_star_collection(StarCollectionDao dao) {
-        starCollectionService.insert(dao);
-    }
+//    private void save_find_view_dao(FindViewDao find_viewDao) {
+//        findViewService.insert(find_viewDao);
+//        star_collectionDao.setView_show_id(find_viewDao.getId());
+//        star_collectionDao.setStar(0);
+//        star_collectionDao.setCollection(0);
+//        save_star_collection(star_collectionDao);
+//    }
+//
+//
+//    private void save_star_collection(StarCollectionDao dao) {
+//        starCollectionService.insert(dao);
+//    }
 
     //输出header的信息或者传输的信息
     private Map<String, String> getHeadersInfo(HttpServletRequest req) {

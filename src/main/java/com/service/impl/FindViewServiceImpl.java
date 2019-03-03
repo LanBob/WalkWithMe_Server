@@ -38,5 +38,4 @@ public class FindViewServiceImpl implements IFindViewService {
         return findViewMapper.subStar(id);
     }
 
-
 }

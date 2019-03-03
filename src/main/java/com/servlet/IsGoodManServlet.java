@@ -68,12 +68,16 @@ public class IsGoodManServlet extends HttpServlet {
             responseResult.setData(alreadyScoreList);
             printWriter = resp.getWriter();
             printWriter.write(JSONUtil.toJson(responseResult));
-        }else {
-            responseResult.setCode(1);
-            responseResult.setMessage("ok");
-            responseResult.setData(null);
+        }else if("2".equals(code)){
+            String userId = req.getParameter("userId");
+            IsGoodMan isGoodMan = iIsGoodManService.get(userId);
+            ResponseResult<IsGoodMan> isGoodManResponseResult = new ResponseResult<>();
+            isGoodManResponseResult.setMessage("ok");
+            isGoodManResponseResult.setData(isGoodMan);
+            isGoodManResponseResult.setCode(1);
             printWriter = resp.getWriter();
-            printWriter.write(JSONUtil.toJson(responseResult));
+            printWriter.write(JSONUtil.toJson(isGoodManResponseResult));
+
         }
     }
 

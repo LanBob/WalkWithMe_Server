@@ -18,6 +18,7 @@ import com.domain.ViewShowDao;
 import com.mapper.ViewShowMapper;
 import com.service.IViewShowService;
 import com.util.JSONUtil;
+import com.util.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -47,6 +48,7 @@ public class ViewShowGet extends HttpServlet {
     // 只处理get请求
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
         resp.setCharacterEncoding("utf-8");
         Map map = getHeadersInfo(req);
         System.out.println(map);
@@ -68,7 +70,38 @@ public class ViewShowGet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        super.doPost(req, resp);
+        req.setCharacterEncoding("utf-8");
+        resp.setCharacterEncoding("utf-8");
+        String code = req.getParameter("code");
+        if("0".equals(code)){
+//            进行删除操作
+            String viewShowId = req.getParameter("viewShowId");
+            System.out.println("0" + viewShowId);
+            if(viewShowId!= null && viewShowId.trim()!=""){
+                int i = viewShowService.delete(viewShowId);
+                if(i != 0){
+                    feedBack(resp,1,viewShowId);
+                }else {
+                    feedBack(resp,0,viewShowId);
+                }
+            }
+        }
+    }
+
+    private String feedBack(HttpServletResponse resp, int result,String viewShowId) {
+
+        ResponseResult<String> response = new ResponseResult<>();
+        response.setCode(result);
+        response.setData("insert ok");
+        response.setMessage(viewShowId);
+        try {
+            PrintWriter pw = resp.getWriter();
+            pw.print(JSONUtil.toJson(response));
+            pw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     //输出header的信息或者传输的信息

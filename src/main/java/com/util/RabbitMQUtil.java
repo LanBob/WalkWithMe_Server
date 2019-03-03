@@ -12,12 +12,20 @@ import java.util.concurrent.TimeoutException;
  */
 public class RabbitMQUtil {
     private static final Logger logger = LoggerFactory.getLogger(RabbitMQUtil.class);
-    private static final String IP = "localhost";
+//    private static final String IP = "localhost";
+//    private static final int PORT = 5672;
+//    private static final String userName = "lusr";
+//    private static final String passWord = "admin";
+//    private static ConnectionFactory factory = null;
+//    private static final String EXCHANGE_NAME = "MyExchange";
+
+    private static final String IP = "119.29.104.193";
     private static final int PORT = 5672;
     private static final String userName = "lusr";
-    private static final String passWord = "admin";
+    private static final String passWord = "lj1158";
     private static ConnectionFactory factory = null;
     private static final String EXCHANGE_NAME = "MyExchange";
+
 
     private static ConnectionFactory getConnectionFactory() {
         if (factory == null)

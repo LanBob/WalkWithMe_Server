@@ -11,28 +11,34 @@
 		<result column="title" property="title"/>
 		<result column="introduce" property="introduce"/>
 		<result column="city" property="city"/>
-		<!--<result column="star" property="star"/>-->
 		<result column="user_id" property="user_id"/>
 		<result column="type" property="type"/>
 		<result column="money" property="money"/>
-		<!--<result column="collection" property="collection"/>-->
-		<!--<result column="interest" property="interest"/>-->
 		<result column="defaultpath" property="defaultpath"/>
 		<result column="mytime" property="myTime"/>
+		<result column="route" property="route"/>
+		<result column="friendlytoeat" property="friendlyToEat"/>
+		<result column="friendlytolive" property="firendlyToLive"/>
+		<result column="detailaddress" property="detailAddress"/>
+		<result column="score" property="score"/>
 	</resultMap>
 	
-	<insert id="insert">
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
 		insert into 
 		<choose>
             <when test="id == null">
-            	view_show(title,introduce,city,user_id,type,money,defaultpath)
+				view_show(title,introduce,city,user_id,type,money,defaultpath,
+				mytime,route,friendlytoeat,friendlytolive,detailaddress,score)
             	values(#{title},#{introduce},#{city},#{user_id}
-            	,#{type},#{money},#{defaultpath})
+            	,#{type},#{money},#{defaultpath},#{myTime},#{route},#{friendlyToEat},
+				#{firendlyToLive},#{detailAddress},#{score})
             </when>
             <otherwise>
-            	view_show(id,title,introduce,city,user_id,type,money,defaultpath)
+            	view_show(id,title,introduce,city,user_id,type,money,defaultpath,
+				mytime,route,friendlytoeat,friendlytolive,detailaddress,score)
             	values(#{id},#{title},#{introduce},#{city},#{user_id}
-            	,#{type},#{money},#{defaultpath})
+            	,#{type},#{money},#{defaultpath},#{myTime},#{route},#{friendlyToEat},
+				#{firendlyToLive},#{detailAddress},#{score})
             </otherwise>
         </choose>
 	</insert>
@@ -50,8 +56,16 @@
 			<if test="title!=null and ''!=title ">title=#{title},</if>
 			<if test="introduce!=null and ''!=introduce ">introduce=#{introduce},</if>
 			<if test="city!=null and ''!=city ">city=#{city},</if>
+			<if test="user_id!=null and ''!=user_id ">user_id=#{user_id},</if>
 			<if test="type!=null and ''!=type ">type=#{type},</if>
 			<if test="money!=null and ''!=money ">money=#{money},</if>
+			<if test="defaultpath!=null and ''!=defaultpath ">defaultpath=#{defaultpath},</if>
+			<if test="myTime!=null and ''!=myTime ">myTime=#{myTime},</if>
+			<if test="route!=null and ''!=route ">route=#{route},</if>
+			<if test="friendlyToEat!=null and ''!=friendlyToEat ">friendlytoeat=#{friendlyToEat},</if>
+			<if test="firendlyToLive!=null and ''!=firendlyToLive ">friendlytolive=#{firendlyToLive},</if>
+			<if test="detailAddress!=null and ''!=detailAddress ">detailaddress=#{detailAddress},</if>
+			<if test="score!=null and ''!=score ">score=#{score},</if>
 		</trim>
 		where id=#{id}
 	</insert>
@@ -59,5 +73,19 @@
 	<delete id="delete">
 		delete from view_show where id = #{id} 
 	</delete>
-	
+
+
+	<!--查询-->
+	<!--两种，0分，和60-100-->
+	<select id="getViewShowAlreadyScoreByOthers" resultMap="viewShow">
+		select * from view_show where score <![CDATA[ <= ]]> 100 ORDER BY score DESC
+	</select>
+
+	<!--<select id="getViewShowNotComplete" resultMap="viewShow">-->
+		<!--select * from view_show where score <![CDATA[ <= ]]> 100 AND user_id = #{user_id}-->
+	<!--</select>-->
+
+	<select id="getViewShowByUserId" resultMap="viewShow">
+		select * from view_show where user_id = #{user_id}
+	</select>
 </mapper>

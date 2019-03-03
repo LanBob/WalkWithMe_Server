@@ -13,7 +13,7 @@ public interface ViewShowMapper {
 	 * 通过View_show_dao进行插入操作
 	 * @param dao
 	 */
-	int insert(ViewShowDao dao);
+	Long insert(ViewShowDao dao);
 	
 	/**
 	 * 通过type属性得出这个类别所有的数据
@@ -28,8 +28,20 @@ public interface ViewShowMapper {
 	 */
 	int update(ViewShowDao dao);
 	
-	int delete(Long id);
+	int delete(String id);
 
 	List<ViewShowDao> searchByKeyWord(@Param("title") String keyWord);
-	
+
+
+//	增加的查询
+
+	/**
+	 * 查询已经相互验证的ViewShow
+	 * @return
+     */
+	List<ViewShowDao> getViewShowAlreadyScoreByOthers();
+
+//	List<ViewShowDao> getViewShowNotComplete(String userId);
+
+	List<ViewShowDao> getViewShowByUserId(String userId);
 }	

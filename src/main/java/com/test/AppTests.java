@@ -73,6 +73,27 @@ public class AppTests {
     @Autowired
     private IIsGoodManService iIsGoodManService;
 
+    @Autowired
+    private IInterScoreService iInterScoreService;
+
+    @Test
+    public void ssaa(){
+        ViewShowDao viewShowDao = viewShowService.get(737121986L);
+        viewShowDao.setScore(90);
+        viewShowMapper.update(viewShowDao);
+    }
+
+    @Test
+    public void sss(){
+        String userId = "1158";
+//        List<InterScore> list = iInterScoreService.listUserHavaAnyViewShow(userId);
+//        System.out.println(list);
+//        InterScore interScore = new InterScore();
+//        interScore.setUserId("1");
+//        interScore.setViewShowId("4");
+//        iInterScoreService.insert(interScore);
+        iInterScoreService.listUserHavaAnyViewShow("13714158681");
+    }
 
     @Test
     public void s(){

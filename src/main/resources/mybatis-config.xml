@@ -57,6 +57,7 @@
 		<mapper resource="com/mapper/X_Comment_mapper.xml" />
 		<mapper resource="com/mapper/X_FeedBack_mapper.xml" />
 		<mapper resource="com/mapper/X_IsGoodMan_mapper.xml" />
+		<mapper resource="com/mapper/X_InterScore_mapper.xml"/>
 	</mappers>
 
 </configuration>

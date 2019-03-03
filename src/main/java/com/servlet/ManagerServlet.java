@@ -1,8 +1,7 @@
 package com.servlet;
 
-import com.domain.IsGoodMan;
-import com.domain.ResponseResult;
-import com.service.IIsGoodManService;
+import com.domain.*;
+import com.service.*;
 import com.util.JSONUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,6 +28,17 @@ public class ManagerServlet extends HttpServlet{
     @Autowired
     private ResponseResult<String> responseResult;
 
+    @Autowired
+    private IViewShowService viewShowService;
+
+    @Autowired
+    private IInterScoreService interScoreService;
+
+    @Autowired
+    private IFindViewService findViewService;
+
+    @Autowired
+    private IStarCollectionService starCollectionService;
     @Override
     public void init(ServletConfig config) throws ServletException {
         SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
@@ -37,25 +47,65 @@ public class ManagerServlet extends HttpServlet{
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+//     管理员对已经进行了导游相互验证的viewShow进行再次评分，保存到findView
+        String viewShowId = req.getParameter("viewShowId");
+        String sco = req.getParameter("score");
+        int score = Integer.valueOf(sco);
 
+        ViewShowDao viewShowDao = viewShowService.get(Long.valueOf(viewShowId));
+        InterScore interScore = interScoreService.get(viewShowId);
+        int finalScore = viewShowDao.getScore() + score;
+        ResponseResult<String> responseResult = new ResponseResult<>();
+        if( finalScore > 100 && finalScore < 140){
+//            失败的情况
+            interScoreService.delete(interScore);
+            responseResult.setMessage(String.valueOf(viewShowDao.getId()));
+            responseResult.setCode(0);
+            responseResult.setData("noPass");
+            PrintWriter printWriter = resp.getWriter();
+            printWriter.write(JSONUtil.toJson(responseResult));
+        }else if(finalScore >= 140){
+//            如果是成功的情况
+            viewShowDao.setScore(finalScore);
+            int code = viewShowService.update(viewShowDao);
+
+//            一下操作放到一个事务上
+//            保存为FindViewShow
+//            save_find_view_dao(viewShowDao);
+            if(code == 1){
+                responseResult.setMessage(String.valueOf(viewShowDao.getId()));
+                responseResult.setCode(1);
+                responseResult.setData("pass");
+                PrintWriter printWriter = resp.getWriter();
+                printWriter.write(JSONUtil.toJson(responseResult));
+            }else {
+                responseResult.setMessage(String.valueOf(viewShowDao.getId()));
+                responseResult.setCode(1);
+                responseResult.setData("wrong");
+                PrintWriter printWriter = resp.getWriter();
+                printWriter.write(JSONUtil.toJson(responseResult));
+            }
+
+        }
 
     }
+
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //        super.doPost(req, resp);
+//        导游验证进行打分操作
         req.setCharacterEncoding("utf-8");
         resp.setCharacterEncoding("utf-8");
-//        进行打分操作
         String userId = req.getParameter("userId");
         String score = req.getParameter("score");
         IsGoodMan isGoodMan = iIsGoodManService.get(userId);
         PrintWriter pw;
+//        导游验证进行操作
         if(userId != null && score != null){
             isGoodMan.setScore(Integer.valueOf(score));
             iIsGoodManService.update(isGoodMan);
-
             responseResult.setData(isGoodMan.getUserId());
             responseResult.setCode(1);
             responseResult.setMessage("1");
@@ -70,3 +120,34 @@ public class ManagerServlet extends HttpServlet{
         }
     }
 }
+
+//
+//    /**
+//     * 保证只有这里能进行FindView的Insert操作
+//     * @param viewShowDao
+//     */
+//    private void save_find_view_dao(ViewShowDao viewShowDao) {
+//        FindViewDao find_viewDao = new FindViewDao();
+//
+//        find_viewDao.setId(viewShowDao.getId());
+//        find_viewDao.setCity(viewShowDao.getCity());
+//        find_viewDao.setMoney(viewShowDao.getMoney());
+//        find_viewDao.setStar(0);
+//        find_viewDao.setTitle(viewShowDao.getTitle());
+//        find_viewDao.setType(viewShowDao.getType());
+//        find_viewDao.setUser_id(viewShowDao.getUser_id());
+//        find_viewDao.setDefaultpath(viewShowDao.getDefaultpath());
+//        findViewService.insert(find_viewDao);
+//
+////        保存这些StarCollection操作
+//        StarCollectionDao star_collectionDao = new StarCollectionDao();
+//        star_collectionDao.setView_show_id(find_viewDao.getId());
+//        star_collectionDao.setStar(0);
+//        star_collectionDao.setCollection(0);
+//        save_star_collection(star_collectionDao);
+//    }
+//
+//
+//    private void save_star_collection(StarCollectionDao dao) {
+//        starCollectionService.insert(dao);
+//    }

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- 这里对用接口的名称 -->
+<mapper namespace="com.mapper.InterScoreMapper">
+
+	<!-- 需要解决的问题是：这里java代码的名称或者 dao的属性名
+	和sql数据库的列名不相同的时候，应该怎么解决？使用resultMap    结果集和对象的映射
+	id： Mapper文件中resultMap中的唯一名称
+	type:把结果集中的每一行封装成什么类型的对象
+			子元素：result
+	-->
+	<!-- column是数据库的列名。而property是对象 -->
+	<resultMap type="InterScore" id="interScore">
+		<result column="userId" property="userId"/>
+		<result column="viewShowId" property="viewShowId"/>
+		<result column="ownToScore" property="ownToScore"/>
+		<result column="toBeScored" property="toBeScored"/>
+	</resultMap>
+	
+
+	<select id="listCanBeScore" resultMap="interScore">
+		select * from interscore where toBeScored = 'N' AND userId != #{userId}
+	</select>
+
+	<select id="listCanBeDelete" resultMap="interScore">
+		select * from interscore where  toBeScored = 'Y' AND ownToScore = 'Y'
+	</select>
+
+	<select id="getCompleteJudge" resultMap="interScore">
+		select * from interscore where  viewShowId = #{viewShowId} AND toBeScored = 'Y' AND ownToScore = 'Y'
+	</select>
+
+	<select id="get" resultMap="interScore">
+		select * from interscore where  viewShowId = #{viewShowId}
+	</select>
+
+	<select id="listCanBeSetOwnScore" resultMap="interScore">
+		select * from interscore where  userId = #{userId} AND ownToScore = 'N'
+	</select>
+
+	<select id="listUserHavaAnyViewShow" resultMap="interScore">
+		select * from interscore where userId = #{userId}
+	</select>
+
+	<insert id="insert">
+		insert into interscore(viewShowId,userId) values(#{viewShowId},#{userId});
+	</insert>
+
+	<!-- 改       更改操作 -->
+	<update id="update">
+		update interscore set ownToScore = #{ownToScore},toBeScored = #{toBeScored} WHERE viewShowId = #{viewShowId}
+	</update>
+
+	<delete id="delete">
+		delete from interscore where viewShowId=#{viewShowId}
+	</delete>
+
+	<delete id="deleteByViewShowId">
+		delete from interscore where viewShowId=#{viewShowId}
+	</delete>
+</mapper>
