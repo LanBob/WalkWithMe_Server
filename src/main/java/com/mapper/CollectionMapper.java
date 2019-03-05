@@ -16,4 +16,5 @@ public interface CollectionMapper {
 
 	List<Long> list_collection(Long who_collection);
 
+	int deleteByViewShowId(String viewShowId);
 }

@@ -41,4 +41,9 @@
 		where view_show_id=#{view_show_id} AND who_star=#{who_star}
 	</delete>
 
+	<delete id="deleteByViewShowId">
+		DELETE from star
+		where view_show_id=#{view_show_id}
+	</delete>
+
 </mapper>

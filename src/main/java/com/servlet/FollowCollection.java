@@ -11,16 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.domain.CollectionDao;
-import com.domain.FindViewDao;
-import com.domain.PersonDao;
-import com.domain.ResponseResult;
-import com.domain.Star;
-import com.domain.StarCollectionDao;
-import com.domain.UserFollowDao;
+import com.domain.*;
 import com.mapper.CollectionMapper;
 import com.mapper.FindViewMapper;
-import com.mapper.PersonDaoMapper;
 import com.mapper.StarCollectionMapper;
 import com.mapper.StarMapper;
 import com.mapper.UserFollowMapper;
@@ -67,7 +60,7 @@ public class FollowCollection extends HttpServlet {
     private IPersonDaoService personDaoService;
 
     @Autowired
-    private ResponseResult<List<PersonDao>> personResult;
+    private ResponseResult<List<PersonSettingDao>> personResult;
 
     @Autowired
     private IStarCollectionService starCollectionService;
@@ -80,6 +73,8 @@ public class FollowCollection extends HttpServlet {
 
     @Autowired
     private UserFollowDao user_followDao;
+    @Autowired
+    private IPersonSettingService personSettingService;
 
 
     @Override
@@ -160,26 +155,31 @@ public class FollowCollection extends HttpServlet {
             pw = resp.getWriter();
             pw.print(JSONUtil.toJson(rs));
         } else if (code == 3) {// 关注:Parameter:code=3,userId
-
+//改
             List<Long> list_followed_id = userFollowService.get_followed_id(userID);
-            List<PersonDao> list_person = new ArrayList<>();
-            System.out.println("关注");
-            for (Long da : list_followed_id) {
-                System.out.println(da);
-            }
+            List<PersonSettingDao> listPersonSetting = new ArrayList<>();
             for (Long long1 : list_followed_id) {
-                PersonDao dao = personDaoService.get(long1);
-                if (!list_person.contains(dao)){
-                    list_person.add(dao);
-                    System.out.println("sout " + dao);
+                String id = String.valueOf(long1);
+                PersonSettingDao personSetting = personSettingService.getById(id);
+                if (!listPersonSetting.contains(personSetting)){
+                    listPersonSetting.add(personSetting);
                 }
-
             }
+//            List<PersonDao> list_person = new ArrayList<>();
+//            for (Long long1 : list_followed_id) {
+//                PersonDao dao = personDaoService.get(long1);
+//                if (!list_person.contains(dao)){
+//                    list_person.add(dao);
+//                    System.out.println("sout " + dao);
+//                }
+//            }
             personResult.setCode(1);
-            personResult.setData(list_person);
+            personResult.setData(listPersonSetting);
             personResult.setMessage("ok");
             pw = resp.getWriter();
             pw.print(JSONUtil.toJson(rs));
+
+
         } else {//否则，4，就返回Star_collection:Parameters:get请求，view_show_id，code = 4
             //返回这个ViewShowID所Star数和Collection数目
             StarCollectionDao dao = starCollectionService.get(view_show_id);

@@ -45,25 +45,24 @@ public class ViewShowGet extends HttpServlet {
                 config.getServletContext());
     }
 
-    // 只处理get请求
+    // 个人主页的请求，通过ViewShowId进行返回
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("utf-8");
         resp.setCharacterEncoding("utf-8");
-        Map map = getHeadersInfo(req);
-        System.out.println(map);
-
-        Long id = Long.valueOf(req.getParameter("id"));
-        PrintWriter pw = null;
-        dao = viewShowService.get(id);
-        System.out.println(dao);
-        String json = JSONUtil.toJson(dao);
-        view_show_daoResponseResult.setCode(1);
-        view_show_daoResponseResult.setMessage("success");
-        view_show_daoResponseResult.setData(dao);
-        pw = resp.getWriter();
-        pw.print(JSONUtil.toJson(view_show_daoResponseResult));
-        System.out.println(JSONUtil.toJson(view_show_daoResponseResult));
+        String viewId = req.getParameter("id");
+        if(viewId != null &&!"".equals(viewId) && StrUtil.isInteger(viewId)){
+            Long id = Long.valueOf(viewId);
+            PrintWriter pw = null;
+            dao = viewShowService.get(id);
+            System.out.println(dao);
+            String json = JSONUtil.toJson(dao);
+            view_show_daoResponseResult.setCode(1);
+            view_show_daoResponseResult.setMessage("success");
+            view_show_daoResponseResult.setData(dao);
+            pw = resp.getWriter();
+            pw.print(JSONUtil.toJson(view_show_daoResponseResult));
+        }
     }
 
     // 只处理POST请求

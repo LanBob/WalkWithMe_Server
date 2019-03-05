@@ -4,10 +4,7 @@ import com.domain.FindViewDao;
 import com.domain.InterScore;
 import com.domain.StarCollectionDao;
 import com.domain.ViewShowDao;
-import com.mapper.FindViewMapper;
-import com.mapper.InterScoreMapper;
-import com.mapper.StarCollectionMapper;
-import com.mapper.ViewShowMapper;
+import com.mapper.*;
 import com.service.IFindViewService;
 import com.service.IInterScoreService;
 import com.service.IStarCollectionService;
@@ -33,20 +30,27 @@ public class ViewShowService implements IViewShowService {
 
     @Autowired
     private FindViewMapper findViewMapper;
+    @Autowired
+    private StarMapper starMapper;
+    @Autowired
+    private CollectionMapper collectionMapper;
+    @Autowired
+    private IInterScoreService interScoreService;
 
     @Autowired
     private StarCollectionMapper starCollectionMapper;
 
-//    @Autowired
-//    private IFindViewService findViewService;
-//
-//    @Autowired
-//    private IStarCollectionService starCollectionService;
-
     @Transactional(isolation = Isolation.READ_COMMITTED)
     @Override
     public Long insert(ViewShowDao viewShowDao) {
-        return viewShowMapper.insert(viewShowDao);
+
+        Long i = viewShowMapper.insert(viewShowDao);
+        InterScore interScore = new InterScore();
+        interScore.setUserId(String.valueOf(viewShowDao.getUser_id()));
+        String id = String.valueOf(viewShowDao.getId());
+        interScore.setViewShowId(id);
+        interScoreService.insert(interScore);
+        return i;
     }
 
     @Override
@@ -74,6 +78,9 @@ public class ViewShowService implements IViewShowService {
     public int delete(String viewShowId) {
         interScoreMapper.deleteByViewShowId(viewShowId);
         findViewMapper.delete(Long.valueOf(viewShowId));
+        starCollectionMapper.delete(Long.valueOf(viewShowId));
+        starMapper.deleteByViewShowId(viewShowId);
+        collectionMapper.deleteByViewShowId(viewShowId);
         return viewShowMapper.delete(viewShowId);
     }
 
@@ -82,6 +89,7 @@ public class ViewShowService implements IViewShowService {
         return viewShowMapper.update(viewShowDao);
     }
 
+    @Transactional
     @Override
     public int wantToUpdate(ViewShowDao viewShowDao){
 //        save_find_view_dao(viewShowDao);

@@ -42,4 +42,9 @@
 		where view_show_id=#{view_show_id} AND who_collection=#{who_collection}
 	</delete>
 
+	<delete id="deleteByViewShowId">
+		DELETE from collection
+		where view_show_id=#{view_show_id}
+	</delete>
+
 </mapper>

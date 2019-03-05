@@ -74,7 +74,7 @@ public class PersonSetting extends HttpServlet {
         daoResponseResult.setCode(1);
         daoResponseResult.setMessage("1");
         String json = JSONUtil.toJson(daoResponseResult);
-        System.out.println(json);
+//        System.out.println(json);
         pw.write(json);
     }
 

@@ -67,11 +67,12 @@ public class ManagerServlet extends HttpServlet{
         }else if(finalScore >= 140){
 //            如果是成功的情况
             viewShowDao.setScore(finalScore);
-            int code = viewShowService.update(viewShowDao);
-
+            int code = viewShowService.wantToUpdate(viewShowDao);
 //            一下操作放到一个事务上
 //            保存为FindViewShow
 //            save_find_view_dao(viewShowDao);
+            System.out.println("code " + code);
+
             if(code == 1){
                 responseResult.setMessage(String.valueOf(viewShowDao.getId()));
                 responseResult.setCode(1);

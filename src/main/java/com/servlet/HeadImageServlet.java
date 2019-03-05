@@ -4,6 +4,7 @@ import com.domain.HeadImage;
 import com.domain.ResponseResult;
 import com.service.IHeadImageService;
 import com.util.JSONUtil;
+import com.util.StrUtil;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -72,7 +73,8 @@ public class HeadImageServlet extends HttpServlet{
         //获取文件需要上传到的路径
 
         //改为/user/local/upload
-        String path = "D:\\upload";
+//        String path = "D:\\upload";
+        String path = StrUtil.pathUrl;
 
         /*
             上传成功：D:\mysoftware\eclipseworkspace\Final\WebContent

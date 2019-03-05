@@ -56,10 +56,8 @@ public class FindItemServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //		findItemService = ContextUtil.getBean(FindItemServiceImpl.class);
 //		result = ContextUtil.getBean(ResponseResult.class);
-        Map map = getHeadersInfo(req);
         resp.setCharacterEncoding("utf-8");
         req.setCharacterEncoding("utf-8");
-        System.out.println(map);
         String types = req.getParameter("type");
         String userId = req.getParameter("userId");
         System.out.println("type" + types + "userId" + userId);
@@ -81,8 +79,6 @@ public class FindItemServlet extends HttpServlet {
             pw = resp.getWriter();
             pw.print(JSONUtil.toJson(result));
         }
-//			logger.info("list " + result.getData());
-//        System.out.println("list " + result.getData());
     }
 
     @Override
@@ -91,14 +87,4 @@ public class FindItemServlet extends HttpServlet {
         super.doPost(req, resp);
     }
 
-    private Map<String, String> getHeadersInfo(HttpServletRequest req) {
-        Map<String, String> map = new HashMap<String, String>();
-        Enumeration headerNames = req.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String key = (String) headerNames.nextElement();
-            String value = req.getHeader(key);
-            map.put(key, value);
-        }
-        return map;
-    }
 }

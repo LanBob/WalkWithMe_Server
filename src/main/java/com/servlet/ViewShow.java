@@ -20,7 +20,9 @@ import com.service.IFindViewService;
 import com.service.IInterScoreService;
 import com.service.IStarCollectionService;
 import com.service.IViewShowService;
+import com.util.StrUtil;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
@@ -84,7 +86,7 @@ public class ViewShow extends HttpServlet {
         resp.setCharacterEncoding("utf-8");
         String code = req.getParameter("code");
 
-        if("0".equals(code)){
+        if ("0".equals(code)) {
 //            管理员进行查询60-100分之间的ViewShow
             ResponseResult<List<ViewShowDao>> responseResult = new ResponseResult<>();
             List<ViewShowDao> list = viewShowService.getViewShowAlreadyScoreByOthers();
@@ -93,10 +95,10 @@ public class ViewShow extends HttpServlet {
             responseResult.setMessage("ok");
             PrintWriter printWriter = resp.getWriter();
             printWriter.write(JSONUtil.toJson(responseResult));
-        }else if("1".equals(code)){
+        } else if ("1".equals(code)) {
 //            个人中心进行查询
             String userId = req.getParameter("userId");
-            System.out.println("1" +userId);
+            System.out.println("1" + userId);
             ResponseResult<List<ViewShowDao>> responseResult = new ResponseResult<>();
             List<ViewShowDao> list = viewShowService.getViewShowByUserId(userId);
             responseResult.setData(list);
@@ -104,7 +106,7 @@ public class ViewShow extends HttpServlet {
             responseResult.setMessage("ok");
             PrintWriter printWriter = resp.getWriter();
             printWriter.write(JSONUtil.toJson(responseResult));
-        }else if("2".equals(code)){
+        } else if ("2".equals(code)) {
 //          进行评分操作，并将开放findView
 
 
@@ -117,25 +119,27 @@ public class ViewShow extends HttpServlet {
             throws ServletException, IOException {
         req.setCharacterEncoding("utf-8");
         resp.setCharacterEncoding("utf-8");
-        PrintWriter pw = null;
+
         try {
             save(req, resp);//处理结果
             result.setCode(1);
             result.setMessage("success");
             result.setData(view_showDao.getId() + "");
-            pw = resp.getWriter();
+            PrintWriter pw = resp.getWriter();
             pw.print(JSONUtil.toJson(result));
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (pw != null)
-                pw.close();
+            result.setCode(0);
+            result.setMessage("success");
+            result.setData(view_showDao.getId() + "");
+            PrintWriter pw = resp.getWriter();
+            pw.print(JSONUtil.toJson(result));
         }
 
     }
 
 
-    private void save(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void save(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         //获得磁盘文件条目工厂
         if (factory == null) {
             factory = new DiskFileItemFactory();
@@ -143,8 +147,8 @@ public class ViewShow extends HttpServlet {
         //获取文件需要上传到的路径 
 
         //改为/user/local/upload
-        String path = "D:\\upload";
-
+//        String path = "D:\\upload";
+        String path = StrUtil.pathUrl;
         /*
             上传成功：D:\mysoftware\eclipseworkspace\Final\WebContent
         	upload\IMG_-1811728065.jpg
@@ -157,80 +161,36 @@ public class ViewShow extends HttpServlet {
         //设置 缓存的大小  
         factory.setSizeThreshold(1024 * 1024 * 10);
         ServletFileUpload upload = new ServletFileUpload(factory);
-        try {
-            List<FileItem> list = (List<FileItem>) upload.parseRequest(req);
-            for (FileItem item : list) {
-                //获取属性名字
-                String name = item.getFieldName();
-                //如果获取的 表单信息是普通的 文本 信息    
-                if (item.isFormField()) {
-                    //获取用户具体输入的字符串,因为表单提交过来的是 字符串类型的   
-                    String json = item.getString();
+        List<FileItem> list = (List<FileItem>) upload.parseRequest(req);
+        for (FileItem item : list) {
+            //获取属性名字
+            String name = item.getFieldName();
+            //如果获取的 表单信息是普通的 文本 信息
+            if (item.isFormField()) {
+                //获取用户具体输入的字符串,因为表单提交过来的是 字符串类型的
+                String json = item.getString();
 //                    System.out.println(json);
-                    view_showDao = JSONUtil.toBean(json, ViewShowDao.class);//转为dao类型
+                view_showDao = JSONUtil.toBean(json, ViewShowDao.class);//转为dao类型
 //                    System.out.println(view_showDao.toString());
-                    save_view_show_dao(view_showDao);//保存操作
-                } else {
-                    //获取路径名    
-                    String value = item.getName();
-                    //索引到最后一个反斜杠    
-                    int start = value.lastIndexOf("\\");
-                    //截取 上传文件的 字符串名字，加1是 去掉反斜杠
-                    String filename = value.substring(start + 1);
-                    System.out.println("filename" + filename);
-                    req.setAttribute(name, filename);
-                    File fff = new File(path, filename);
-                    if (fff == null) filename += "null";
-                    //写到磁盘上
-                    item.write(fff);
-                    System.out.println("上传成功：" + path + filename);
-                }
+//                    save_view_show_dao(view_showDao);//保存操作
+                viewShowService.insert(view_showDao);
+            } else {
+                //获取路径名
+                String value = item.getName();
+                //索引到最后一个反斜杠
+                int start = value.lastIndexOf("\\");
+                //截取 上传文件的 字符串名字，加1是 去掉反斜杠
+                String filename = value.substring(start + 1);
+                System.out.println("filename" + filename);
+                req.setAttribute(name, filename);
+                File fff = new File(path, filename);
+                if (fff == null) filename += "null";
+                //写到磁盘上
+                item.write(fff);
+                System.out.println("上传成功：" + path + filename);
             }
-
-        } catch (Exception e) {
-            System.out.println("上传失败" + e.getMessage());
-            e.printStackTrace();
         }
     }
-
-
-    private void save_view_show_dao(ViewShowDao dao) {
-        String currentTime = String.valueOf(System.currentTimeMillis());
-        dao.setMyTime(currentTime);
-        //保存这个
-        viewShowService.insert(dao);
-
-        InterScore interScore = new InterScore();
-        interScore.setUserId(String.valueOf(dao.getUser_id()));
-        String id = String.valueOf(dao.getId());
-        interScore.setViewShowId(id);
-        interScoreService.insert(interScore);
-//完成任务
-
-//        find_viewDao.setId(dao.getId());
-//        find_viewDao.setCity(dao.getCity());
-//        find_viewDao.setMoney(dao.getMoney());
-////        find_viewDao.setStar(dao.getStar());
-//        find_viewDao.setStar(0);
-//        find_viewDao.setTitle(dao.getTitle());
-//        find_viewDao.setType(dao.getType());
-//        find_viewDao.setUser_id(dao.getUser_id());
-//        find_viewDao.setDefaultpath(dao.getDefaultpath());
-//        save_find_view_dao(find_viewDao);
-    }
-
-//    private void save_find_view_dao(FindViewDao find_viewDao) {
-//        findViewService.insert(find_viewDao);
-//        star_collectionDao.setView_show_id(find_viewDao.getId());
-//        star_collectionDao.setStar(0);
-//        star_collectionDao.setCollection(0);
-//        save_star_collection(star_collectionDao);
-//    }
-//
-//
-//    private void save_star_collection(StarCollectionDao dao) {
-//        starCollectionService.insert(dao);
-//    }
 
     //输出header的信息或者传输的信息
     private Map<String, String> getHeadersInfo(HttpServletRequest req) {

@@ -16,4 +16,6 @@ public interface StarMapper {
 	int delete(Map map);
 
 	List<Long> list_star(Long who_star);
+
+	int deleteByViewShowId(String viewShowId);
 }	

@@ -5,10 +5,15 @@ import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.regex.Pattern;
 
 
 public class StrUtil {
     private static final long serialVersionUID = 1L;
+
+    public static final String pathUrl = "/usr/local/upload";
+
+
 	/**
      * 此类不需要实例化
      */
@@ -35,6 +40,15 @@ public class StrUtil {
         return !isBlank(str);
     }
 
+
+    public static boolean isInteger(String str) {
+        //加或减出现一次或者零次，然后数字出现任意次
+//        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+        if(str == null || "".equals(str))
+            return false;
+        Pattern pattern = Pattern.compile("^[\\d]*$");
+        return pattern.matcher(str).matches();
+    }
     /**
      * 判断一组字符串是否有空值
      *
