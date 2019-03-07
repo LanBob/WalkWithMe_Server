@@ -88,6 +88,7 @@ public class JaWebsocket {
 public void binaryMessage(@PathParam("fromUserId") String fromUserId, ByteBuffer msg, Session session) {
         byte b[] = msg.array();
         System.out.println("来自客户端+" + session.getId() + "二进制的消息:" + b.length);
+
         byte[] bytes = new byte[msg.remaining()];
         msg.get(bytes,0,bytes.length);
         Message message = (Message) StrUtil.toObject(bytes);

@@ -30,7 +30,7 @@ import java.util.List;
 public class InterScoreServlet extends HttpServlet{
 
     @Autowired
-    private IInterScoreService interScoreMapper;
+    private IInterScoreService interScoreService;
 
     @Autowired
     private ViewShowMapper viewShowMapper;
@@ -50,13 +50,13 @@ public class InterScoreServlet extends HttpServlet{
         if("0".equals(code)){
             String userId = req.getParameter("userId");
             System.out.println(userId);
-            List<InterScore> list = interScoreMapper.listUserHavaAnyViewShow(userId);
+            List<InterScore> list = interScoreService.listUserHavaAnyViewShow(userId);
             System.out.println(list);
             System.out.println("" + list.size());
             if(list != null && list.size() > 0){
 //                如果这个人可以有必要进行评分
                 ResponseResult<ViewShowDao> responseResult = new ResponseResult<>();
-                List<InterScore> list1 = interScoreMapper.listCanBeScore(userId);
+                List<InterScore> list1 = interScoreService.listCanBeScore(userId);
 //              随机得到这个InterScore
                 if(list1 != null && list1.size() > 0){
 //                    如果有要进行评分的话
@@ -82,7 +82,8 @@ public class InterScoreServlet extends HttpServlet{
             String viewShowId = req.getParameter("viewShowId");
             String sco = req.getParameter("score");
             int score = Integer.valueOf(sco);
-            interScoreMapper.toScoreToViewId(viewShowId,userId,score);
+//            不应该是Mapper
+            interScoreService.toScoreToViewId(viewShowId,userId,score);
             ResponseResult<String> responseResult = new ResponseResult<>();
             responseResult.setData("ok");
             responseResult.setCode(1);

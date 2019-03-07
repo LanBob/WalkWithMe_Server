@@ -75,7 +75,7 @@ public class InterScoreServiceImpl implements IInterScoreService{
 
     @Override
     public InterScore get(String viewShowId) {
-        return null;
+        return interScoreMapper.get(viewShowId);
     }
 
     @Override

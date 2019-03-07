@@ -13,6 +13,8 @@
 		<package name="com.domain" />
 	</typeAliases>
 
+
+
 	<!--
 	默认选择dev这个环境
 	<environments default="test">

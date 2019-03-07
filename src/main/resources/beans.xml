@@ -42,6 +42,8 @@
         <property name="url" value="${url}"></property>
         <property name="username" value="${username}"></property>
         <property name="password" value="${password}"></property>
+        <property name="maxActive" value="150"/>
+        <property name="maxWait" value="20000"></property>
     </bean>
 
     <bean id="SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

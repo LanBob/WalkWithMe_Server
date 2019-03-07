@@ -1,13 +1,19 @@
 package com.test;
 
+import com.app.JMS.bean.Message;
+import com.app.JMS.bean.MsgSendStatus;
+import com.app.JMS.bean.MsgType;
+import com.app.JMS.bean.TextMsgBody;
 import com.rabbitmq.client.*;
 import com.util.RabbitMQUtil;
 
+import com.util.StrUtil;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -27,9 +33,27 @@ public class RabbitMQTest {
 
     @Test
     public void produce(){
-        String userId = "1158";
-        String message = "success";
-        RabbitMQUtil.sendMessage(userId,message.getBytes());
+        String toUserId = "13724158682";
+//        Message message = new Message();
+        Message mMessgae = getBaseSendMessage(MsgType.TEXT);
+        TextMsgBody mTextMsgBody = new TextMsgBody();
+        mTextMsgBody.setMessage("helddlo LJ");
+        mMessgae.setBody(mTextMsgBody);
+        byte[] bytes = StrUtil.toByteArray(mMessgae);
+        RabbitMQUtil.sendMessage(toUserId,bytes);
+    }
+
+    private Message getBaseSendMessage(MsgType msgType) {
+        String from = "13714158681";
+        String toUserId = "13724158682";
+        Message mMessgae = new Message();
+        mMessgae.setUuid(UUID.randomUUID() + "");
+        mMessgae.setSenderId(from);
+        mMessgae.setTargetId(toUserId);
+        mMessgae.setSentTime(System.currentTimeMillis());
+        mMessgae.setSentStatus(MsgSendStatus.SENDING);
+        mMessgae.setMsgType(msgType);
+        return mMessgae;
     }
 
     @Test

@@ -78,6 +78,7 @@ public class ManagerServlet extends HttpServlet{
                 responseResult.setCode(1);
                 responseResult.setData("pass");
                 PrintWriter printWriter = resp.getWriter();
+                System.out.println(JSONUtil.toJson(responseResult));
                 printWriter.write(JSONUtil.toJson(responseResult));
             }else {
                 responseResult.setMessage(String.valueOf(viewShowDao.getId()));
@@ -87,6 +88,19 @@ public class ManagerServlet extends HttpServlet{
                 printWriter.write(JSONUtil.toJson(responseResult));
             }
 
+        }else {
+//            管理员进行的导游相互验证模块
+            int newScore = score + viewShowDao.getScore();
+            viewShowDao.setScore(newScore);
+            viewShowService.update(viewShowDao);
+            interScore.setToBeScored("Y");
+            interScoreService.update(interScore);
+            System.out.println("Manager进行评分");
+            responseResult.setMessage(String.valueOf(viewShowDao.getId()));
+            responseResult.setCode(1);
+            responseResult.setData("manager");
+            PrintWriter printWriter = resp.getWriter();
+            printWriter.write(JSONUtil.toJson(responseResult));
         }
 
     }

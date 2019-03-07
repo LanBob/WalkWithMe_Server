@@ -40,8 +40,8 @@ public class CodeMassage extends HttpServlet{
         req.setCharacterEncoding("utf-8");
         String phone = req.getParameter("phone");
         System.out.println(phone);
-//        String code = messageCode.sendCodeToUser(phone);
-        String code = "1158";
+        String code = messageCode.sendCodeToUser(phone);
+//        String code = "1158";
         PrintWriter pw = resp.getWriter();
         ResponseResult<String> responseResult = new ResponseResult<>();
         if(code != null && code != ""){

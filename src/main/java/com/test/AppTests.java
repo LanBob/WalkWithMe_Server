@@ -189,6 +189,17 @@ public class AppTests {
         System.out.println(sd);
     }
 
+
+    @Test
+    public  void getToMinute(){
+        Long t = System.currentTimeMillis();
+        String mill = String.valueOf(t);
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String sd = sdf.format(new Date(Long.parseLong(mill)));
+        String re = sd.substring(5,15);
+        System.out.println(re);
+    }
+
     @Test
     public void Comment1(){
         List<CommentDao> list = commentService.getCommentByViewShowId("44");
